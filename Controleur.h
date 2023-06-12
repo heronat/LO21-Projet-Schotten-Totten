@@ -8,6 +8,7 @@
 #include "Pioche.h"
 #include "JeuClan.h"
 #include "CarteClan.h"
+#include "VuePlateau.h"
 #include <stdlib.h>
 
 
@@ -19,10 +20,11 @@ class Controleur {
     Plateau* m_plateau; // ou Plateau
     JeuClan& m_jeu_clan;
     JeuTactique& m_jeu_tactique;
+    VuePlateau* m_vue_plateau;
 
     vector<CarteClan *> m_carte_non_pose;
 
-    explicit Controleur(bool m_tactique);
+    explicit Controleur(bool m_tactique, bool ia2);
     ~Controleur();
 
     struct Handler
@@ -38,6 +40,7 @@ public:
     Controleur(const Controleur& j) = delete;
     Controleur& operator=(const Controleur& j) = delete;
 
+    static Controleur& getControleur(bool tactique, bool ia2);
     static Controleur& getControleur(bool tactique);
     static void libererControleur();
 
@@ -83,6 +86,11 @@ public:
     void supprimer_carte_pose_v1(CarteClan *carte);
     void supprimer_carte_pose_v2(CarteClan *carte);
     void JouerTourClassique1();
+
+    void control_piocher_clan();
+    void lancer_suite_tour(VuePlateau *vue_plateau);
+    void lancer_tour_ia(VuePlateau* vue_plateau);
+    void jouer_partie();
 
 };
 int qui_gagne(Combinaison * combi1, Combinaison * combi2);

@@ -1,6 +1,14 @@
-//
-// Created by Utilisateur on 02/04/2023.
-//
+#include "VuePlateau.h"
+#include "VueCarte.h"
+#include <QApplication>
+#include <QWidget>
+#include <QLabel>
+#include <QComboBox>
+#include <QGridLayout>
+#include <QStandardItemModel>
+#include <QStandardItem>
+#include <QStyleFactory>
+#include <string>
 #include <iostream>
 #include "CarteRuse.h"
 #include "CarteModeCombat.h"
@@ -15,151 +23,108 @@
 #include "Joueur.h"
 #include "Main_Joueur.h"
 
-#include <typeinfo>
-#include <stdlib.h>
-#include <unistd.h>
-
-
 using namespace std;
 
-int main() {
-
-    Controleur& c = Controleur::getControleur(true);
-    c.debut_de_partie_tactique();
-    c.JouerTour1();
-    c.JouerTour1();
-    c.getPlateau()->setJoueurActif(2);
-    c.JouerTour2();
-    c.getPlateau()->setJoueurActif(1);
-    c.JouerTour1();
-    /*
-
-
-
-
-
-
-
-
-   //Controleur& c = Controleur::getControleur(true);
-    //Controleur& c = Controleur::getControleur(true);
-    c.getPlateau()->getBornes(1);
-
-    c.getPlateau()->getBornes(1)->setBoue(true);
-
-   // c.revendiquer_borne(1);
-    //cout << "revendiquer 1:" << c.getPlateau()->getBornes(1)->getRevendique() << endl;
-
-    c.getPlateau()->getJoueur1()->getMain()->ajouterCarte(new CarteClan(Puissance::neuf, Couleur::violet));
-    c.getPlateau()->getJoueur1()->getMain()->ajouterCarte(new CarteClan(Puissance::huit, Couleur::rouge));
-    c.getPlateau()->getJoueur1()->getMain()->ajouterCarte(new CarteClan(Puissance::sept, Couleur::rouge));
-    c.getPlateau()->getJoueur1()->getMain()->ajouterCarte(new CarteClan(Puissance::six, Couleur::rouge));
-    c.getPlateau()->getJoueur1()->getMain()->ajouterCarte(new CarteClan(Puissance::cinq, Couleur::rouge));
-    c.getPlateau()->getJoueur1()->getMain()->ajouterCarte(new CarteClan(Puissance::quatre, Couleur::rouge));
-    c.getPlateau()->getJoueur1()->getMain()->ajouterCarte(new CarteClan(Puissance::trois, Couleur::rouge));
-    c.getPlateau()->getJoueur1()->getMain()->ajouterCarte(new CarteClan(Puissance::deux, Couleur::rouge));
-    c.getPlateau()->getJoueur1()->getMain()->ajouterCarte(new CarteClan(Puissance::un, Couleur::rouge));
-    c.getPlateau()->getBornes(1)->getCartesJ1()->ajouterCarte(new CarteClan(Puissance::neuf, Couleur::violet));
-    c.getPlateau()->getBornes(2)->getCartesJ1()->ajouterCarte(new CarteClan(Puissance::huit, Couleur::rouge));
-
-    c.getPlateau()->getJoueur2()->getMain()->ajouterCarte(new CarteClan(Puissance::un, Couleur::rouge));
-    c.getPlateau()->getJoueur2()->getMain()->ajouterCarte(new CarteClan(Puissance::deux, Couleur::rouge));
-    c.getPlateau()->getJoueur2()->getMain()->ajouterCarte(new CarteClan(Puissance::trois, Couleur::rouge));
-    c.getPlateau()->getJoueur2()->getMain()->ajouterCarte(new CarteClan(Puissance::quatre, Couleur::rouge));
-    auto k = new CarteTroupeElite("Joker", Puissance::zero, Couleur::neutre);
-    c.getPlateau()->getBornes(5)->getCartesJ2()->ajouterCarte(k);
-
-    c.getPlateau()->getBornes(5)->getCartesJ2()->ajouterCarte(new CarteClan(Puissance::trois, Couleur::vert));
-    c.getPlateau()->getBornes(6)->getCartesJ2()->ajouterCarte(new CarteClan(Puissance::huit, Couleur::rouge));
-    //c.JouerTour1();
-    for (int i = 0 ; i<3;i++){
-        c.JouerTour1();
-        sleep(10);
-    }
-
-    /*
-    *//*c.getPlateau()->getBornes(1)->getCartesJ2()->ajouterCarte(new CarteClan(Puissance::deux, Couleur::rouge));
-    c.getPlateau()->getBornes(1)->getCartesJ2()->ajouterCarte(new CarteClan( Puissance::quatre, Couleur::rouge));
-   *//**//*
-
-    for (int i = 0; i < 5; i++) {
-
-        c.JouerTourIAClassique();
-    }
-
-*//**//*
-   // c.revendiquer_borne(1);
-    //sleep(5);
-*//**//*
-    auto k = new CarteTroupeElite("Joker", Puissance::zero, Couleur::neutre);
-    cout << k->getNom() << " "<< k->getPuissance() << " " << k->getCouleur() << endl;
-    //k->jouer_Joker();
-    cout << k->getNom() << " "<< k->getPuissance() << " " << k->getCouleur() << endl;*//**//*
-
-
-*//**//*    Controleur& c = Controleur::getControleur(true);
-    cout << "il ya "<<c.getPiocheTactique()->getNbCartes()<< endl;
-    for (auto i =0; i<4; i++) {
-        auto a = c.getPiocheTactique()->piocherCarteTroupeElite();
-        cout<< a.getNom() << endl;
-
-    }
-    while ( ! c.getPiocheTactique()->estVide()) {
-        auto a = c.getPiocheTactique()->piocherCarteTactique();
-        cout << a.getNom()<<endl;
-    }*//**//*
-
-    c.JouerTour1(); c.JouerTour1(); c.JouerTour1();
-    c.JouerTour1(); c.JouerTour1(); c.JouerTour1();
-    c.JouerTour1(); c.JouerTour1(); c.JouerTour1();
-    //TODO sucer Nathan
-
-    cout << "il ya "<<c.getPiocheTactique()->getNbCartes()<< endl;
-    cout << "attention : " << c.getPiocheTactique()->quandjepiochejefaisattention()<< endl;
-    switch (c.getPiocheTactique()->quandjepiochejefaisattention()) {
-        case 1: {
-            cout << "pioche tactique" << endl;
-            auto a = c.getPiocheTactique()->piocherCarteTactique();
-            cout << a.getNom() << endl;
-            break;
-        }
-
-        case 2: {
-            cout << "pioche troupe elite" << endl;
-            auto b = c.getPiocheTactique()->piocherCarteTroupeElite();
-            cout << b.getNom() << endl;
-            break;
-        }
-    }
-
-*//*
-
-*/
-
-    return 0;
+void validate_menu_1(QWidget *menu, const string &edition, bool Ia){
+    menu->close();
+    cout << Ia;
+    Controleur& c = Controleur::getControleur(false, Ia);
+    c.jouer_partie();
 }
 
-/*
- * PAS drole :( Si c'est drole
-cout << "Bienvenue dans Schotten-Totten haha ! bienvenue bienvnue dans ce superbe jeu, je suis bob lennon et voici le jeu" << endl;
-cout << "Plusieurs options s'offrent à vous , veillez en choisir une haha ! " << endl;
-cout << "1- Jouer une partie contre un autre joueur haha !" << endl;
-cout << "2- Jouer une partie contre une IA haha !" << endl;
-cout << "3- Quitter le jeu haha !" << endl;
-int choix;
-cin >> choix;
-switch(choix) {
-    case 1:
-        cout << "Vous avez choisi de jouer contre un autre joueur haha !" << endl;
-        //JoeurTour1();
-        break;
-    case 2:
-        cout << "Vous avez choisi de jouer contre une IA haha !" << endl;
-        break;
-    case 3:
-        cout << "Vous avez choisi de quitter le jeu haha !" << endl;
-        break;
-    default:
-        cout << "Vous n'avez pas choisi une option valide, veuillez recommencer haha !" << endl;
-        break;
-}*/
+void launch_menu(QApplication *app){
+    auto *menu = new QWidget();
+    menu ->resize(500, 180);
+
+    menu->setContentsMargins(50, 30, 50, 50);
+    auto *gridLayout = new QGridLayout;
+
+    auto *editionLabel = new QLabel("Choix de l'édition :");
+    auto* editionCombo = new QComboBox();
+    auto *model = new QStandardItemModel();
+    auto *item1 = new QStandardItem("-- Veuillez choisir une option --");
+    auto *item2 = new QStandardItem("Clan");
+    auto *item3 = new QStandardItem("Tactique");
+
+    model->appendRow(item1);
+    model->appendRow(item2);
+    model->appendRow(item3);
+
+    editionCombo->setCurrentIndex(0);
+    editionCombo->setMinimumWidth(200);
+    editionCombo->setStyle(QStyleFactory::create("Fusion"));
+
+    item1->setFlags(item1->flags() & ~Qt::ItemIsEnabled);
+
+    editionCombo->setModel(model);
+
+    gridLayout->addWidget(editionLabel, 0, 0);
+    gridLayout->addWidget(editionCombo, 0, 1);
+
+    gridLayout->addItem(new QSpacerItem(0, 15), 1, 0);
+
+    auto *IaLabel = new QLabel("Jouer contre :");
+    auto* IaCombo = new QComboBox();
+    auto *modelIa = new QStandardItemModel();
+    auto *item1Ia = new QStandardItem("-- Veuillez choisir une option --");
+    auto *item2Ia = new QStandardItem("Joueur");
+    auto *item3Ia = new QStandardItem("Ia");
+
+    modelIa->appendRow(item1Ia);
+    modelIa->appendRow(item2Ia);
+    modelIa->appendRow(item3Ia);
+
+    IaCombo->setCurrentIndex(0);
+    IaCombo->setMinimumWidth(200);
+    IaCombo->setStyle(QStyleFactory::create("Fusion"));
+
+    item1Ia->setFlags(item1->flags() & ~Qt::ItemIsEnabled);
+
+    IaCombo->setModel(modelIa);
+
+    gridLayout->addWidget(IaLabel, 2, 0);
+    gridLayout->addWidget(IaCombo, 2, 1);
+
+    gridLayout->addItem(new QSpacerItem(0, 15), 1, 0);
+
+    auto *validateButton = new QPushButton("Valider");
+    validateButton->setFixedWidth(200);
+    validateButton->setStyle(QStyleFactory::create("Fusion"));
+
+    auto *cancelButton = new QPushButton("Annuler");
+    cancelButton->setFixedWidth(200);
+    cancelButton->setStyle(QStyleFactory::create("Fusion"));
+
+    gridLayout->addWidget(validateButton, 5, 0, Qt::AlignCenter);
+    gridLayout->addWidget(cancelButton, 5, 1, Qt::AlignCenter);
+
+    QObject::connect(cancelButton, &QPushButton::clicked, app, &QApplication::quit);
+
+    QObject::connect(validateButton, &QPushButton::clicked, [menu, editionCombo, IaCombo](){
+        string edition = editionCombo->currentText().toStdString();
+        string Ia = IaCombo->currentText().toStdString();
+        if(Ia == "Ia"){
+            cout << "test IA";
+            validate_menu_1(menu, edition, true);
+        }
+        else{
+            validate_menu_1(menu, edition, false);
+        }
+
+    });
+
+    menu->setLayout(gridLayout);
+    menu->setWindowTitle("Schotten Totten - Menu");
+
+    menu->show();
+}
+
+
+
+int main(int argc, char * argv[]) {
+    QApplication app(argc, argv);
+    app.setStyle(QStyleFactory::create("Fusion"));
+    launch_menu(&app);
+
+    return QApplication::exec();
+}

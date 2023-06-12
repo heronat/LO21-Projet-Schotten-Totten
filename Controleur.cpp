@@ -7,6 +7,7 @@
 #include "CarteRuse.h"
 #include "CarteModeCombat.h"
 #include <ctime>
+#include <cstdlib>
 #include <random>
 
 
@@ -18,16 +19,16 @@ int generateRandomNumber() {
 }
 
 
-Controleur::Controleur(bool tactique): m_tactique(tactique), m_gagnant(0), m_jeu_clan(JeuClan::getJeuClan()), m_jeu_tactique(JeuTactique::getJeuTactique()), m_carte_non_pose(m_jeu_clan.getNbCartes())
+Controleur::Controleur(bool tactique, bool ia2): m_tactique(tactique), m_gagnant(0), m_jeu_clan(JeuClan::getJeuClan()), m_jeu_tactique(JeuTactique::getJeuTactique()), m_carte_non_pose(m_jeu_clan.getNbCartes())
 {
     m_pioche_clan = new Pioche(m_jeu_clan);
     if(tactique){
         m_pioche_tactique = new Pioche(m_jeu_tactique);
         printf("tactique\n");
-        m_plateau = new Plateau(7, false, false);
+        m_plateau = new Plateau(7, false, ia2);
     }
     else{
-        m_plateau = new Plateau(6, false, false);
+        m_plateau = new Plateau(6, false, ia2);
         printf("classique\n");
     }
 
@@ -50,10 +51,17 @@ Controleur::~Controleur()
     }
 }
 
+Controleur& Controleur::getControleur(bool tactique, bool ia2)
+{
+    if (handler.controleur == nullptr)
+        handler.controleur = new Controleur(tactique, ia2);
+    return *handler.controleur;
+}
+
 Controleur& Controleur::getControleur(bool tactique)
 {
     if (handler.controleur == nullptr)
-        handler.controleur = new Controleur(tactique);
+        handler.controleur = new Controleur(tactique, false);
     return *handler.controleur;
 }
 
@@ -603,6 +611,10 @@ bool Controleur::check_fin_partie() {
                 return true;
             }
             serie1=0;
+        }
+        else {
+            serie1=0;
+            serie2=0;
         }
         if (sum1 == 5){
             m_gagnant=1;
@@ -1478,6 +1490,89 @@ int CarteClan_egales(CarteClan* c1, CarteClan* c2){
         return 1;
     else
         return 0;
+}
+
+void Controleur::jouer_partie() {
+    auto *fenetre = new QWidget;
+    debut_de_partie_classique();
+    m_vue_plateau = new VuePlateau(fenetre);
+    m_vue_plateau->setWindowState(Qt::WindowMaximized);
+    m_vue_plateau->show();
+
+    //jouer_tour();
+}
+
+void Controleur::control_piocher_clan(){
+    if(m_pioche_clan->estVide()){
+        cout << "La pioche est vide" << endl;
+        return;
+    }
+    CarteClan* ci = new CarteClan(getPiocheClan()->piocherCarteClan());
+    if(m_plateau->getJoueurActif()==1){
+        m_plateau->getJoueur1()->getMain()->ajouterCarte(ci);
+    }
+    else{
+        m_plateau->getJoueur2()->getMain()->ajouterCarte(ci);
+    }
+    cout << ci->getCouleur() << " " << ci->getPuissance() << endl;
+    cout << " Taille de la pioche : " << m_pioche_clan->getNbCartes() << endl;
+}
+
+void Controleur::lancer_tour_ia(VuePlateau* vue_plateau) {
+    vector<Carte*> cartesMain = m_plateau->getJoueur2()->getMain()->getCartes();
+    int id_carte = rand()%m_plateau->getJoueur2()->getMain()->getCartes().size();
+    cout << "la taille de la main est" << m_plateau->getJoueur2()->getMain()->getCartes().size() << endl;
+    cout << "lid de la carte est" << id_carte << endl;
+    Carte* carte = cartesMain[id_carte];
+    bool verif= false;
+    int borne_choisie;
+    if (auto carte_choisie = dynamic_cast<CarteClan *>(carte)) {
+        while(!verif){
+            borne_choisie = rand()%9;
+            if(m_plateau->getBornes(borne_choisie)->getCartesJ2()->getCartes().size()<3){
+                cout << carte_choisie->getCouleur() << " " << carte_choisie->getPuissance() << endl;
+                m_plateau->poser(*m_plateau->getBornes(borne_choisie),carte_choisie);
+                m_plateau->getJoueur2()->getMain()->supprimerCarte(id_carte);
+                verif=true;
+            }
+
+        }
+
+    }
+    if(!m_pioche_clan->estVide()) {
+        CarteClan *ci = new CarteClan(getPiocheClan()->piocherCarteClan());
+        m_plateau->getJoueur2()->getMain()->ajouterCarte(ci);
+    }
+
+    for(int i=0; i<9; i++){
+        if (m_plateau->getBornes(i)->getCartesJ2()->getCartes().size()==3){
+            revendiquer_borne(i);
+        }
+    }
+    vue_plateau->update_vuecartesj2();
+    vue_plateau->update_vue_bornes();
+    vue_plateau->update();
+    lancer_suite_tour(vue_plateau);
+
+}
+
+void Controleur::lancer_suite_tour(VuePlateau* vue_plateau) {
+    vue_plateau->set_deja_joue(false);
+    if(vue_plateau->get_joueur_actif()==1){
+        vue_plateau->set_joueur_actif(2);
+        m_plateau->setJoueurActif(2);
+    }
+    else{
+        vue_plateau->set_joueur_actif(1);
+        m_plateau->setJoueurActif(1);
+    }
+    if (check_fin_partie()){
+        vue_plateau->menu_fin_partie();
+
+        cout << "Le joueur gagant est le joueur " << getGagnant()<< endl;
+    } else if(m_plateau->getJoueurActif()==2 && m_plateau->getJoueur2()->getIa()){
+        lancer_tour_ia(vue_plateau);
+    }
 }
 
 
