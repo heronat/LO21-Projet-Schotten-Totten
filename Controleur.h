@@ -88,6 +88,7 @@ public:
     void JouerTourClassique1();
 
     void control_piocher_clan();
+    void control_piocher_tactique();
     void lancer_suite_tour(VuePlateau *vue_plateau);
     void lancer_tour_ia(VuePlateau* vue_plateau);
     void jouer_partie();

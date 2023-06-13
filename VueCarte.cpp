@@ -3,6 +3,9 @@
 #include <QString>
 #include <QStaticText>
 #include "CarteException.h"
+#include "CarteClan.h"
+#include "CarteTactique.h"
+#include "CarteTroupeElite.h"
 
 const char* ToStringCouleur(Couleur couleur)
 {
@@ -20,6 +23,8 @@ const char* ToStringCouleur(Couleur couleur)
             return "Vert";
         case Couleur::violet:
             return "Violet";
+        case Couleur::neutre:
+            return "Neutre";
         default:
             return "Erreur";
     }
@@ -53,7 +58,7 @@ const char* ToStringPuissance(Puissance puissance){
     }
 }
 
-VueCarte::VueCarte(const CarteClan& c, QWidget *parent) : QPushButton(parent),carte(&c)
+VueCarte::VueCarte(const Carte& c, QWidget *parent) : QPushButton(parent),carte(&c)
 {
     carte = &c;
     setBackgroundRole(QPalette::Base);
@@ -61,25 +66,44 @@ VueCarte::VueCarte(const CarteClan& c, QWidget *parent) : QPushButton(parent),ca
     setFixedSize(100,50);
     connect(this,SIGNAL(clicked()),this,SLOT(clickedEvent()));
     //setCheckable(true);
-    Couleur couleur_carte = carte->getCouleur();
-    const char* couleur_carte_string = ToStringCouleur(couleur_carte);
-    Puissance puissance_carte = carte->getPuissance();
-    const char* puissance_carte_string = ToStringPuissance(puissance_carte);
-    setText(QString::fromStdString(couleur_carte_string) + QString::fromStdString(" ") + QString::fromStdString(puissance_carte_string));
-    if(couleur_carte_string == "Jaune")
-        setStyleSheet("background-color: gold");
-    else if(couleur_carte_string == "Vert")
-        setStyleSheet("background-color: limegreen");
-    else if(couleur_carte_string == "Violet")
-        setStyleSheet("background-color: orchid");
-    else if(couleur_carte_string == "Rouge")
-        setStyleSheet("background-color: crimson");
-    else if(couleur_carte_string == "Bleu")
-        setStyleSheet("background-color: royalblue");
-    else if(couleur_carte_string == "Marron")
-        setStyleSheet("background-color: chocolate");
-    else
+    if(dynamic_cast<const CarteTroupeElite*> (carte)!=nullptr){
+        const CarteTroupeElite* carte_troupe_elite = dynamic_cast<const CarteTroupeElite*>(carte);
+        const string nom= carte_troupe_elite->getNom();
+        Couleur couleur_carte = carte_troupe_elite->getCouleur();
+        const char* couleur_carte_string = ToStringCouleur(couleur_carte);
+        Puissance puissance_carte = carte_troupe_elite->getPuissance();
+        const char* puissance_carte_string = ToStringPuissance(puissance_carte);
+        setText(QString::fromStdString(nom) + QString::fromStdString(" ") + QString::fromStdString(couleur_carte_string) + QString::fromStdString(" ") + QString::fromStdString(puissance_carte_string));
         setStyleSheet("background-color: white");
+    }
+    else if(dynamic_cast<const CarteClan *>(carte) != nullptr){
+        const CarteClan* carte_clan = dynamic_cast<const CarteClan*>(carte);
+        Couleur couleur_carte = carte_clan->getCouleur();
+        const char* couleur_carte_string = ToStringCouleur(couleur_carte);
+        Puissance puissance_carte = carte_clan->getPuissance();
+        const char* puissance_carte_string = ToStringPuissance(puissance_carte);
+        setText(QString::fromStdString(couleur_carte_string) + QString::fromStdString(" ") + QString::fromStdString(puissance_carte_string));
+        if(couleur_carte_string == "Jaune")
+            setStyleSheet("background-color: gold");
+        else if(couleur_carte_string == "Vert")
+            setStyleSheet("background-color: limegreen");
+        else if(couleur_carte_string == "Violet")
+            setStyleSheet("background-color: orchid");
+        else if(couleur_carte_string == "Rouge")
+            setStyleSheet("background-color: crimson");
+        else if(couleur_carte_string == "Bleu")
+            setStyleSheet("background-color: royalblue");
+        else if(couleur_carte_string == "Marron")
+            setStyleSheet("background-color: chocolate");
+        else
+            setStyleSheet("background-color: white");
+    }
+    else {
+        const CarteTactique* carte_tactique = dynamic_cast<const CarteTactique*>(carte);
+        const string nom= carte_tactique->getNom();
+        setStyleSheet("background-color: white");
+        setText(QString::fromStdString(nom));
+    }
 
 }
 

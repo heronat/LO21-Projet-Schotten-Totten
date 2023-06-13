@@ -39,6 +39,8 @@ public:
     void update_vue_bornes();
     void update_vue_pioche();
     void menu_fin_partie();
+    void launch_menu_pioche();
+    void launch_menu_carte_tactique(VueCarte* vc);
     /// Getters
     //QWidget* get_vue_carte() const {return fenetre_carte;}
     int get_joueur_actif() const {return j_actif;}
@@ -59,7 +61,7 @@ private:
     QLabel* label_joueur_actuel;
     int j_actif;
     VuePioche* bouton_pioche;
-    QPushButton* bouton_pioche_tactique;
+    VuePioche* bouton_pioche_tactique;
     QGridLayout* body;
     VueCarte* vuecartesj1[27];
     VueCarte* vuecartesj2[27];
@@ -72,14 +74,18 @@ private:
     VueCarte* vuecartesmain[6];
     QPushButton* bouton_revendiquer;
     QPushButton* bouton_fin_de_tour;
+    QWidget* menu;
     bool deja_joue;
 
 
 public slots:
     void carteClique(VueCarte *vc);
+    void carteposeClique(VueCarte *vc);
     void revendiquerClique();
     void piocheClique();
     void finDeTourClique();
+    void launch_menu_clan();
+    void launch_menu_tactique();
 };
 
 

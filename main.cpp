@@ -25,10 +25,10 @@
 
 using namespace std;
 
-void validate_menu_1(QWidget *menu, const string &edition, bool Ia){
+void validate_menu_1(QWidget *menu, bool version, bool Ia){
     menu->close();
     cout << Ia;
-    Controleur& c = Controleur::getControleur(false, Ia);
+    Controleur& c = Controleur::getControleur(version, Ia);
     c.jouer_partie();
 }
 
@@ -105,10 +105,16 @@ void launch_menu(QApplication *app){
         string Ia = IaCombo->currentText().toStdString();
         if(Ia == "Ia"){
             cout << "test IA";
-            validate_menu_1(menu, edition, true);
+            if(edition == "Clan")
+                validate_menu_1(menu, false, true);
+            else if(edition == "Tactique")
+                validate_menu_1(menu, true, true);
         }
         else{
-            validate_menu_1(menu, edition, false);
+            if(edition == "Clan")
+                validate_menu_1(menu, false, false);
+            else if(edition == "Tactique")
+                validate_menu_1(menu, true, false);
         }
 
     });

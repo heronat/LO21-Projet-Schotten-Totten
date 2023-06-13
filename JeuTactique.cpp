@@ -11,12 +11,14 @@ JeuTactique::JeuTactique()
     size_t i = 0;
 
 
-    cartes[i++]= new CarteModeCombat("Colin Maillard");
-    cartes[i++]= new CarteModeCombat("Combat de Boue");
+
     cartes[i++]= new CarteRuse("Chasseur de Tete");
     cartes[i++]= new CarteRuse("Stratege");
     cartes[i++]= new CarteRuse("Banshee");
     cartes[i++]= new CarteRuse("Traitre");
+
+    cartes[i++]= new CarteModeCombat("Colin Maillard");
+    cartes[i++]= new CarteModeCombat("Combat de Boue");
 
     cartes[i++]= new CarteTroupeElite("Joker", Puissance::zero, Couleur::neutre);
     cartes[i++]= new CarteTroupeElite("Joker", Puissance::zero, Couleur::neutre);

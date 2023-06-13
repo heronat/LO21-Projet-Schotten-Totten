@@ -673,16 +673,16 @@ void Controleur::revendiquer_borne(int num_borne) {
                 if (auto t = dynamic_cast<CarteTroupeElite *>(c)) {
                     auto nom = t->getNom();
                     if (nom == "Joker") {
-                        t->jouer_Joker();
+                        //t->jouer_Joker();
                         combi_j1->calculerForceCombi();
                         combi_j1->setTotalPuissance(combi_j1->getTotalPuissance() + static_cast<int>(t->getPuissance()));
                     } else if (nom == "Espion") {
-                        t->jouer_Espion();
+                        //t->jouer_Espion();
                         combi_j1->calculerForceCombi();
                         combi_j1->setTotalPuissance(combi_j1->getTotalPuissance() + static_cast<int>(t->getPuissance()));
 
                     } else if (nom == "Porte_Bouclier") {
-                        t->jouer_PorteBouclier();
+                        //t->jouer_PorteBouclier();
                         combi_j1->calculerForceCombi();
                         combi_j1->setTotalPuissance(combi_j1->getTotalPuissance() + static_cast<int>(t->getPuissance()));
 
@@ -973,17 +973,17 @@ void Controleur::revendiquer_borne(int num_borne) {
                 if (auto t = dynamic_cast<CarteTroupeElite *>(c)) {
                     auto nom = t->getNom();
                     if (nom == "Joker") {
-                        t->jouer_Joker();
+                        //t->jouer_Joker();
                         combi_j2->calculerForceCombi();
                         combi_j2->setTotalPuissance(combi_j2->getTotalPuissance() + static_cast<int>(t->getPuissance()));
 
                     } else if (nom == "Espion") {
-                        t->jouer_Espion();
+                        //t->jouer_Espion();
                         combi_j2->calculerForceCombi();
                         combi_j2->setTotalPuissance(combi_j2->getTotalPuissance() + static_cast<int>(t->getPuissance()));
 
                     } else if (nom == "Porte_Bouclier") {
-                        t->jouer_PorteBouclier();
+                        //t->jouer_PorteBouclier();
                         combi_j2->calculerForceCombi();
                         combi_j2->setTotalPuissance(combi_j2->getTotalPuissance() + static_cast<int>(t->getPuissance()));
 
@@ -1285,6 +1285,15 @@ void Controleur::fin_de_partie(){
         delete m_plateau->m_bornes[i];
     }
     delete m_plateau;
+
+    delete m_pioche_clan;
+    if (m_tactique) {
+        delete m_pioche_tactique;
+    }
+    for (auto carte : m_carte_non_pose){
+        delete carte;
+    }
+    m_carte_non_pose.clear();
 }
 
 void Controleur::debut_de_partie_classique() {
@@ -1510,12 +1519,50 @@ void Controleur::control_piocher_clan(){
     CarteClan* ci = new CarteClan(getPiocheClan()->piocherCarteClan());
     if(m_plateau->getJoueurActif()==1){
         m_plateau->getJoueur1()->getMain()->ajouterCarte(ci);
+        //cout << "Joueur 1 a pioché une carte" << endl;
+
     }
     else{
         m_plateau->getJoueur2()->getMain()->ajouterCarte(ci);
+        cout << "Joueur 2 a pioché une carte" << endl;
     }
     cout << ci->getCouleur() << " " << ci->getPuissance() << endl;
     cout << " Taille de la pioche : " << m_pioche_clan->getNbCartes() << endl;
+}
+
+void Controleur::control_piocher_tactique(){
+    if(m_pioche_tactique->estVide()){
+        cout << "La pioche est vide" << endl;
+        return;
+    }
+    else {
+        int n= m_pioche_tactique->quandjepiochejefaisattention();
+        CarteTactique* ci;
+        if (n==1){
+            CarteTactique* ci = new CarteTactique(getPiocheTactique()->piocherCarteTactique());
+            if(m_plateau->getJoueurActif()==1){
+                m_plateau->getJoueur1()->getMain()->ajouterCarte(ci);
+                cout << "Joueur 1 a pioché une carte" << endl;
+            }
+            else{
+                m_plateau->getJoueur2()->getMain()->ajouterCarte(ci);
+                cout << "Joueur 2 a pioché une carte" << endl;
+            }
+        }
+        else {
+            CarteTroupeElite* ci = new CarteTroupeElite(getPiocheTactique()->piocherCarteTroupeElite());
+            if(m_plateau->getJoueurActif()==1){
+                m_plateau->getJoueur1()->getMain()->ajouterCarte(ci);
+                cout << "Joueur 1 a pioché une carte" << endl;
+            }
+            else{
+                m_plateau->getJoueur2()->getMain()->ajouterCarte(ci);
+                cout << "Joueur 2 a pioché une carte" << endl;
+            }
+        }
+
+        cout << " Taille de la pioche : " << m_pioche_tactique->getNbCartes() << endl;
+    }
 }
 
 void Controleur::lancer_tour_ia(VuePlateau* vue_plateau) {
@@ -1545,7 +1592,7 @@ void Controleur::lancer_tour_ia(VuePlateau* vue_plateau) {
     }
 
     for(int i=0; i<9; i++){
-        if (m_plateau->getBornes(i)->getCartesJ2()->getCartes().size()==3){
+        if (m_plateau->getBornes(i)->getCartesJ2()->getCartes().size()==3 && m_plateau->getBornes(i)->getRevendique()==0){
             revendiquer_borne(i);
         }
     }
