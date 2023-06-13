@@ -63,8 +63,8 @@ private:
     VuePioche* bouton_pioche;
     VuePioche* bouton_pioche_tactique;
     QGridLayout* body;
-    VueCarte* vuecartesj1[27];
-    VueCarte* vuecartesj2[27];
+    VueCarte* vuecartesj1[36];
+    VueCarte* vuecartesj2[36];
     QGridLayout* body2;
     QButtonGroup* groupe_bornes;
     QPushButton* bornes[9];

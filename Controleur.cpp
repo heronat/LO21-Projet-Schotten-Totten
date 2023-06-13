@@ -673,16 +673,16 @@ void Controleur::revendiquer_borne(int num_borne) {
                 if (auto t = dynamic_cast<CarteTroupeElite *>(c)) {
                     auto nom = t->getNom();
                     if (nom == "Joker") {
-                        //t->jouer_Joker();
+                        t->jouer_Joker();
                         combi_j1->calculerForceCombi();
                         combi_j1->setTotalPuissance(combi_j1->getTotalPuissance() + static_cast<int>(t->getPuissance()));
                     } else if (nom == "Espion") {
-                        //t->jouer_Espion();
+                        t->jouer_Espion();
                         combi_j1->calculerForceCombi();
                         combi_j1->setTotalPuissance(combi_j1->getTotalPuissance() + static_cast<int>(t->getPuissance()));
 
                     } else if (nom == "Porte_Bouclier") {
-                        //t->jouer_PorteBouclier();
+                        t->jouer_PorteBouclier();
                         combi_j1->calculerForceCombi();
                         combi_j1->setTotalPuissance(combi_j1->getTotalPuissance() + static_cast<int>(t->getPuissance()));
 
@@ -801,22 +801,22 @@ void Controleur::revendiquer_borne(int num_borne) {
             for (auto a1: cartes_a1) {
                 for (auto a2: cartes_a2) {
                     for (auto a3: cartes_a3) {
-                            if (CarteClan_egales(a1, a2) || CarteClan_egales(a1, a3) ||
-                                CarteClan_egales(a2, a3)  )
-                                continue;
+                        if (CarteClan_egales(a1, a2) || CarteClan_egales(a1, a3) ||
+                            CarteClan_egales(a2, a3)  )
+                            continue;
 
 
-                            Combinaison *combi_temp = new Combinaison();
-                            combi_temp->ajouterCarte(a1);
-                            combi_temp->ajouterCarte(a2);
-                            combi_temp->ajouterCarte(a3);
-                            if (qui_gagne(combi_j1, combi_temp) == 2) {
-                                // J2 gagne
-                                cout << "\nJ2 peut gagner: " << endl;
-                                cout << a1->getPuissance() <<" "<< a1->getCouleur() << " "<< a2->getPuissance() <<" "<< a2->getCouleur() << " "<< a3->getPuissance() <<" "<< a3->getCouleur() << endl;
-                                delete combi_temp;
-                                return;
-                            }
+                        Combinaison *combi_temp = new Combinaison();
+                        combi_temp->ajouterCarte(a1);
+                        combi_temp->ajouterCarte(a2);
+                        combi_temp->ajouterCarte(a3);
+                        if (qui_gagne(combi_j1, combi_temp) == 2) {
+                            // J2 gagne
+                            cout << "\nJ2 peut gagner: " << endl;
+                            cout << a1->getPuissance() <<" "<< a1->getCouleur() << " "<< a2->getPuissance() <<" "<< a2->getCouleur() << " "<< a3->getPuissance() <<" "<< a3->getCouleur() << endl;
+                            delete combi_temp;
+                            return;
+                        }
 
                     }
                 }
@@ -942,18 +942,18 @@ void Controleur::revendiquer_borne(int num_borne) {
                             if (CarteClan_egales(a1, a2) || CarteClan_egales(a1, a3) || CarteClan_egales(a1, a4) ||
                                 CarteClan_egales(a2, a3) || CarteClan_egales(a2, a4) || CarteClan_egales(a3, a4))
                                 continue;
-                                Combinaison *combi_temp = new Combinaison();
-                                combi_temp->setBoue(true);
-                                combi_temp->ajouterCarte(a1);
-                                combi_temp->ajouterCarte(a2);
-                                combi_temp->ajouterCarte(a3);
-                                combi_temp->ajouterCarte(a4);
-                                if (qui_gagne(combi_j1, combi_temp) == 2) {
-                                    // J2 gagne
-                                    cout << "J2 peut gagner" << endl;
-                                    cout << a1->getPuissance() <<" "<< a1->getCouleur() << " "<< a2->getPuissance() <<" "<< a2->getCouleur() << " "<< a3->getPuissance() <<" "<< a3->getCouleur() << " "<< a4->getPuissance() <<" "<< a4->getCouleur() << endl;
-                                    delete combi_temp;
-                                    return;
+                            Combinaison *combi_temp = new Combinaison();
+                            combi_temp->setBoue(true);
+                            combi_temp->ajouterCarte(a1);
+                            combi_temp->ajouterCarte(a2);
+                            combi_temp->ajouterCarte(a3);
+                            combi_temp->ajouterCarte(a4);
+                            if (qui_gagne(combi_j1, combi_temp) == 2) {
+                                // J2 gagne
+                                cout << "J2 peut gagner" << endl;
+                                cout << a1->getPuissance() <<" "<< a1->getCouleur() << " "<< a2->getPuissance() <<" "<< a2->getCouleur() << " "<< a3->getPuissance() <<" "<< a3->getCouleur() << " "<< a4->getPuissance() <<" "<< a4->getCouleur() << endl;
+                                delete combi_temp;
+                                return;
 
                             }
                         }
@@ -973,17 +973,17 @@ void Controleur::revendiquer_borne(int num_borne) {
                 if (auto t = dynamic_cast<CarteTroupeElite *>(c)) {
                     auto nom = t->getNom();
                     if (nom == "Joker") {
-                        //t->jouer_Joker();
+                        t->jouer_Joker();
                         combi_j2->calculerForceCombi();
                         combi_j2->setTotalPuissance(combi_j2->getTotalPuissance() + static_cast<int>(t->getPuissance()));
 
                     } else if (nom == "Espion") {
-                        //t->jouer_Espion();
+                        t->jouer_Espion();
                         combi_j2->calculerForceCombi();
                         combi_j2->setTotalPuissance(combi_j2->getTotalPuissance() + static_cast<int>(t->getPuissance()));
 
                     } else if (nom == "Porte_Bouclier") {
-                        //t->jouer_PorteBouclier();
+                        t->jouer_PorteBouclier();
                         combi_j2->calculerForceCombi();
                         combi_j2->setTotalPuissance(combi_j2->getTotalPuissance() + static_cast<int>(t->getPuissance()));
 

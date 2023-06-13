@@ -52,9 +52,9 @@ VuePlateau::VuePlateau(QWidget *parent){
         vuecarte=new VueCarte;
     }
 
-    for (int i = 0; i < 27; i++) {
+    for (int i = 0; i < 36; i++) {
 
-        body->addWidget(vuecartesj1[i], i % 3, i / 3);
+        body->addWidget(vuecartesj1[i], i % 4, i / 4);
     }
 
     body2 = new QGridLayout();
@@ -74,8 +74,8 @@ VuePlateau::VuePlateau(QWidget *parent){
     for(auto & vuecarte : vuecartesj2) {
         vuecarte=new VueCarte;
     }
-    for (int i = 0; i < 27; i++) {
-        body3->addWidget(vuecartesj2[i], i % 3, i / 3);
+    for (int i = 0; i < 36; i++) {
+        body3->addWidget(vuecartesj2[i], i % 4, i / 4);
     }
 
     body4 = new QGridLayout();
@@ -111,10 +111,10 @@ void VuePlateau::update_vuecartesj1(){
         vector<CarteClan *> vect = Controleur::getControleur(false).getPlateau()->getBornes(j)->getCartesJ1()->getCartes();
         size_t i = 0;
         for (auto &carte: vect) {
-            delete vuecartesj1[j * 3 + i];
-            vuecartesj1[j * 3 + i] = new VueCarte(*carte);
-            connect(vuecartesj1[j * 3 + i],SIGNAL(carteClicked(VueCarte*)),this,SLOT(carteposeClique(VueCarte*)));
-            body->addWidget(vuecartesj1[j * 3 + i], (j * 3 + i) % 3, (j * 3 + i) / 3);
+            delete vuecartesj1[j * 4 + i];
+            vuecartesj1[j * 4 + i] = new VueCarte(*carte);
+            connect(vuecartesj1[j * 4 + i],SIGNAL(carteClicked(VueCarte*)),this,SLOT(carteposeClique(VueCarte*)));
+            body->addWidget(vuecartesj1[j * 4 + i], (j * 4 + i) % 4, (j * 4 + i) / 4);
             i++;
         }
     }
@@ -125,10 +125,10 @@ void VuePlateau::update_vuecartesj2(){
         vector<CarteClan *> vect = Controleur::getControleur(false).getPlateau()->getBornes(j)->getCartesJ2()->getCartes();
         size_t i = 0;
         for (auto &carte: vect) {
-            delete vuecartesj2[j * 3 + i];
-            vuecartesj2[j * 3 + i] = new VueCarte(*carte);
-            connect(vuecartesj2[j * 3 + i],SIGNAL(carteClicked(VueCarte*)),this,SLOT(carteposeClique(VueCarte*)));
-            body3->addWidget(vuecartesj2[j * 3 + i], (j * 3 + i) % 3, (j * 3 + i) / 3);
+            delete vuecartesj2[j * 4 + i];
+            vuecartesj2[j * 4 + i] = new VueCarte(*carte);
+            connect(vuecartesj2[j * 4 + i],SIGNAL(carteClicked(VueCarte*)),this,SLOT(carteposeClique(VueCarte*)));
+            body3->addWidget(vuecartesj2[j * 4 + i], (j * 4 + i) % 4, (j * 4 + i) / 4);
             i++;
         }
     }
@@ -148,9 +148,8 @@ void VuePlateau::update_vuecartesjoueur(){
     else {
         vector<Carte*> vect = Controleur::getControleur(false).getPlateau()->getJoueur2()->getMain()->getCartes();
         for (int i=0; i<Controleur::getControleur(false).getPlateau()->getJoueur2()->getMain()->getCartes().size() ; i++) {
-            const CarteClan* carteClan = dynamic_cast<const CarteClan*>(vect[i]);
             delete vuecartesmain[i];
-            vuecartesmain[i] = new VueCarte(*carteClan);
+            vuecartesmain[i] = new VueCarte(*vect[i]);
             connect(vuecartesmain[i],SIGNAL(carteClicked(VueCarte*)),this,SLOT(carteClique(VueCarte*)));
             body4->addWidget(vuecartesmain[i], 0, i+3);
         }
@@ -368,9 +367,26 @@ void VuePlateau::carteClique(VueCarte *vc) {
                             CarteModeCombat::jouer_CombatdeBoue(Controleur::getControleur(false).getPlateau()->getBornes(i));
                             cout<< "Combat de boue joué sur borne : "<< i << endl;
                         }
+                        string nom=carte_tactique->getNom();
+                        vector<Carte *> vect = Controleur::getControleur(false).getPlateau()->getJoueur1()->getMain()->getCartes();
+                        int k=0;
+                        for(auto& carte:vect){
+                            if(dynamic_cast<const CarteTactique *>(carte)){
+                                auto* c_tact = dynamic_cast<const CarteTactique *>(carte);
+                                if(c_tact->getNom()==nom){
+                                    Controleur::getControleur(false).getPlateau()->getJoueur1()->getMain()->supprimerCarte(k);
+                                }
+                            }
+                            k++;
+                        }
+                        launch_menu_pioche();
+                        update_vuecartesj1();
+                        update_vue_pioche();
+                        update();
+
+                        deja_joue = true;
                     }
-                    else if (Controleur::getControleur(false).getPlateau()->getBornes(i)->getCartesJ1()->getCartes().size() <
-                        3) {
+                    else if (Controleur::getControleur(false).getPlateau()->getBornes(i)->getCartesJ1()->getCartes().size() <3 || (Controleur::getControleur(false).getPlateau()->getBornes(i)->getCartesJ1()->getCartes().size() <4 && Controleur::getControleur(false).getPlateau()->getBornes(i)->getCartesJ1()->getBoue())) {
                         Borne *b = Controleur::getControleur(false).getPlateau()->getBornes(i);
                         Controleur::getControleur(false).getPlateau()->poser(*b,
                                                                              const_cast<CarteClan *>(dynamic_cast<const CarteClan *>(&(vc->getCarte()))));
@@ -389,7 +405,7 @@ void VuePlateau::carteClique(VueCarte *vc) {
                         vector<Carte *> vect = Controleur::getControleur(
                                 false).getPlateau()->getJoueur1()->getMain()->getCartes();
                         //affichage_vecteur_carte(vect);
-                        int i = 0;
+                        int j = 0;
                         cout << "debug5" << endl;
                         cout << vect.size() << endl;
                         for (auto &carte: vect) {
@@ -399,9 +415,9 @@ void VuePlateau::carteClique(VueCarte *vc) {
                                     cout << "debug7" << endl;
                                     cout << carteClan->getCouleur() << endl;
                                     cout << carteClan->getPuissance() << endl;
-                                    cout << "i=" << i << endl;
+                                    cout << "i=" << j << endl;
                                     Controleur::getControleur(
-                                            false).getPlateau()->getJoueur1()->getMain()->supprimerCarte(i);
+                                            false).getPlateau()->getJoueur1()->getMain()->supprimerCarte(j);
                                     break;
                                 }
                             }
@@ -433,14 +449,32 @@ void VuePlateau::carteClique(VueCarte *vc) {
                     if(auto carte_tactique= dynamic_cast<const CarteTactique *>(&(vc->getCarte()))){
                         if(carte_tactique->getNom()=="Colin Maillard"){
                             CarteModeCombat::jouer_ColinMaillard(Controleur::getControleur(false).getPlateau()->getBornes(i));
+                            cout<< "Colin Maillard joué sur borne : "<< i << endl;
                         }
                         else if(carte_tactique->getNom()=="Combat de Boue"){
                             CarteModeCombat::jouer_CombatdeBoue(Controleur::getControleur(false).getPlateau()->getBornes(i));
+                            cout<< "Combat de boue joué sur borne : "<< i << endl;
                         }
+                        string nom=carte_tactique->getNom();
+                        vector<Carte *> vect = Controleur::getControleur(false).getPlateau()->getJoueur2()->getMain()->getCartes();
+                        int k=0;
+                        for(auto& carte:vect){
+                            if(dynamic_cast<const CarteTactique *>(carte)){
+                                auto* c_tact = dynamic_cast<const CarteTactique *>(carte);
+                                if(c_tact->getNom()==nom){
+                                    Controleur::getControleur(false).getPlateau()->getJoueur2()->getMain()->supprimerCarte(k);
+                                }
+                            }
+                            k++;
+                        }
+                        launch_menu_pioche();
+                        update_vuecartesj2();
+                        update_vue_pioche();
+                        update();
+
+                        deja_joue = true;
                     }
-                    else
-                    if (Controleur::getControleur(false).getPlateau()->getBornes(i)->getCartesJ2()->getCartes().size() <
-                        3) {
+                    else if (Controleur::getControleur(false).getPlateau()->getBornes(i)->getCartesJ2()->getCartes().size() <3 || (Controleur::getControleur(false).getPlateau()->getBornes(i)->getCartesJ2()->getCartes().size() <4 && Controleur::getControleur(false).getPlateau()->getBornes(i)->getCartesJ2()->getBoue())) {
                         Borne *b = Controleur::getControleur(false).getPlateau()->getBornes(i);
                         Controleur::getControleur(false).getPlateau()->poser(*b,
                                                                              const_cast<CarteClan *>(dynamic_cast<const CarteClan *>(&(vc->getCarte()))));
