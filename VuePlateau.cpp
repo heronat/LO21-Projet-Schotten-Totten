@@ -94,7 +94,7 @@ VuePlateau::VuePlateau(QWidget *parent){
     body4->addWidget(main_joueur, 0, 2);
     for(auto & vuecarte : vuecartesmain) vuecarte=new VueCarte;
     vector<Carte*> vect = Controleur::getControleur(false).getPlateau()->getJoueur1()->getMain()->getCartes();
-    for (int i=0; i<6 ; i++) {
+    for (int i=0; i<Controleur::getControleur(false).getPlateau()->getJoueur1()->getMain()->getCartes().size() ; i++) {
         const CarteClan* carteClan = dynamic_cast<const CarteClan*>(vect[i]);
         vuecartesmain[i] = new VueCarte(*carteClan);
         connect(vuecartesmain[i],SIGNAL(carteClicked(VueCarte*)),this,SLOT(carteClique(VueCarte*)));
@@ -361,10 +361,12 @@ void VuePlateau::carteClique(VueCarte *vc) {
                     if(auto carte_tactique= dynamic_cast<const CarteTactique *>(&(vc->getCarte()))){
                         if(carte_tactique->getNom()=="Colin Maillard"){
                             CarteModeCombat::jouer_ColinMaillard(Controleur::getControleur(false).getPlateau()->getBornes(i));
+                            bornes[i]->setStyleSheet("background-color: limegreen; color: white;");
                             cout<< "Colin Maillard joué sur borne : "<< i << endl;
                         }
                         else if(carte_tactique->getNom()=="Combat de Boue"){
                             CarteModeCombat::jouer_CombatdeBoue(Controleur::getControleur(false).getPlateau()->getBornes(i));
+                            bornes[i]->setStyleSheet("background-color: lightgreen; color: white;");
                             cout<< "Combat de boue joué sur borne : "<< i << endl;
                         }
                         string nom=carte_tactique->getNom();
@@ -449,10 +451,12 @@ void VuePlateau::carteClique(VueCarte *vc) {
                     if(auto carte_tactique= dynamic_cast<const CarteTactique *>(&(vc->getCarte()))){
                         if(carte_tactique->getNom()=="Colin Maillard"){
                             CarteModeCombat::jouer_ColinMaillard(Controleur::getControleur(false).getPlateau()->getBornes(i));
+                            bornes[i]->setStyleSheet("background-color: limegreen; color: white;");
                             cout<< "Colin Maillard joué sur borne : "<< i << endl;
                         }
                         else if(carte_tactique->getNom()=="Combat de Boue"){
                             CarteModeCombat::jouer_CombatdeBoue(Controleur::getControleur(false).getPlateau()->getBornes(i));
+                            bornes[i]->setStyleSheet("background-color: lightgreen; color: white;");
                             cout<< "Combat de boue joué sur borne : "<< i << endl;
                         }
                         string nom=carte_tactique->getNom();

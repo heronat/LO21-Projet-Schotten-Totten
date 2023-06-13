@@ -673,16 +673,16 @@ void Controleur::revendiquer_borne(int num_borne) {
                 if (auto t = dynamic_cast<CarteTroupeElite *>(c)) {
                     auto nom = t->getNom();
                     if (nom == "Joker") {
-                        t->jouer_Joker();
+                        //t->jouer_Joker();
                         combi_j1->calculerForceCombi();
                         combi_j1->setTotalPuissance(combi_j1->getTotalPuissance() + static_cast<int>(t->getPuissance()));
                     } else if (nom == "Espion") {
-                        t->jouer_Espion();
+                        //t->jouer_Espion();
                         combi_j1->calculerForceCombi();
                         combi_j1->setTotalPuissance(combi_j1->getTotalPuissance() + static_cast<int>(t->getPuissance()));
 
                     } else if (nom == "Porte_Bouclier") {
-                        t->jouer_PorteBouclier();
+                        //t->jouer_PorteBouclier();
                         combi_j1->calculerForceCombi();
                         combi_j1->setTotalPuissance(combi_j1->getTotalPuissance() + static_cast<int>(t->getPuissance()));
 
@@ -973,17 +973,17 @@ void Controleur::revendiquer_borne(int num_borne) {
                 if (auto t = dynamic_cast<CarteTroupeElite *>(c)) {
                     auto nom = t->getNom();
                     if (nom == "Joker") {
-                        t->jouer_Joker();
+                        //t->jouer_Joker();
                         combi_j2->calculerForceCombi();
                         combi_j2->setTotalPuissance(combi_j2->getTotalPuissance() + static_cast<int>(t->getPuissance()));
 
                     } else if (nom == "Espion") {
-                        t->jouer_Espion();
+                        //t->jouer_Espion();
                         combi_j2->calculerForceCombi();
                         combi_j2->setTotalPuissance(combi_j2->getTotalPuissance() + static_cast<int>(t->getPuissance()));
 
                     } else if (nom == "Porte_Bouclier") {
-                        t->jouer_PorteBouclier();
+                        //t->jouer_PorteBouclier();
                         combi_j2->calculerForceCombi();
                         combi_j2->setTotalPuissance(combi_j2->getTotalPuissance() + static_cast<int>(t->getPuissance()));
 
@@ -1298,16 +1298,31 @@ void Controleur::fin_de_partie(){
 
 void Controleur::debut_de_partie_classique() {
     // Ajout des 6 cartes dans la main du joueur 1
-    for (int i = 0; i < 6; i++) {
-        CarteClan *ci = new CarteClan(getPiocheClan()->piocherCarteClan());
-        m_plateau->m_joueur1->getMain()->ajouterCarte(ci);
+    if(m_tactique){
+        for (int i = 0; i < 7; i++) {
+            CarteClan *ci = new CarteClan(getPiocheClan()->piocherCarteClan());
+            m_plateau->m_joueur1->getMain()->ajouterCarte(ci);
+        }
+
+        // Ajout des 6 cartes dans la main du joueur 2
+        for (int i = 0; i < 7; i++) {
+            CarteClan *ci = new CarteClan(getPiocheClan()->piocherCarteClan());
+            m_plateau->m_joueur2->getMain()->ajouterCarte(ci);
+        }
+    }
+    else {
+        for (int i = 0; i < 6; i++) {
+            CarteClan *ci = new CarteClan(getPiocheClan()->piocherCarteClan());
+            m_plateau->m_joueur1->getMain()->ajouterCarte(ci);
+        }
+
+        // Ajout des 6 cartes dans la main du joueur 2
+        for (int i = 0; i < 6; i++) {
+            CarteClan *ci = new CarteClan(getPiocheClan()->piocherCarteClan());
+            m_plateau->m_joueur2->getMain()->ajouterCarte(ci);
+        }
     }
 
-    // Ajout des 6 cartes dans la main du joueur 2
-    for (int i = 0; i < 6; i++) {
-        CarteClan *ci = new CarteClan(getPiocheClan()->piocherCarteClan());
-        m_plateau->m_joueur2->getMain()->ajouterCarte(ci);
-    }
 
     // Affichage des mains des joueurs
     m_plateau->afficherMainJoueur(1);
