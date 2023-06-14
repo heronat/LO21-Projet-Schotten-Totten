@@ -9,6 +9,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <random>
+#include <sstream>
 
 
 int generateRandomNumber() {
@@ -628,7 +629,7 @@ bool Controleur::check_fin_partie() {
     return false;
 }
 
-void Controleur::revendiquer_borne(int num_borne) {
+std::string Controleur::revendiquer_borne(int num_borne) {
 
     Borne *borne = m_plateau->getBornes(num_borne);
     Combinaison *combi_j1 = borne->getCartesJ1();
@@ -636,39 +637,44 @@ void Controleur::revendiquer_borne(int num_borne) {
     vector<CarteClan *> cartes_pose_j1 = combi_j1->getCartes();
     vector<CarteClan *> cartes_pose_j2 = combi_j2->getCartes();
 
+    //TODO temporaire:
+    cout << "Les cartes sont\nJ1:  "<< endl;
+    affichage_vecteur_carteclan(cartes_pose_j1);
+    cout << "\nJ2:" << endl;
+    affichage_vecteur_carteclan(cartes_pose_j2);
+    cout <<"\n"<<endl;
+
     int joueur_qui_revendique = getPlateau()->getJoueurActif();
     if (joueur_qui_revendique == 1){
         if(combi_j1->getBoue() == 0){
             if (cartes_pose_j1.size() !=3){
-                cout << "J1 n'a pas pose 3 cartes, il ne peut pas revendiquer la borne" << endl;
-                return;
+                return "J1 n'a pas pose 3 cartes, il ne peut pas revendiquer la borne";
             }
         }
         else{
             if (cartes_pose_j1.size() !=4){
-                cout << "J1 n'a pas pose 4 cartes, il ne peut pas revendiquer la borne" << endl;
-                return;
+                return "J1 n'a pas pose 4 cartes, il ne peut pas revendiquer la borne";
             }
         }
     }
     else{
         if(combi_j2->getBoue() == 0){
             if (cartes_pose_j2.size() !=3){
-                cout << "J2 n'a pas pose 3 cartes, il ne peut pas revendiquer la borne" << endl;
-                return;
+                return "J2 n'a pas pose 3 cartes, il ne peut pas revendiquer la borne";
             }
         }
         else{
             if (cartes_pose_j2.size() !=4){
-                cout << "J2 n'a pas pose 4 cartes, il ne peut pas revendiquer la borne" << endl;
-                return;
+                return "J2 n'a pas pose 4 cartes, il ne peut pas revendiquer la borne";
             }
         }
     }
 
     if (joueur_qui_revendique == 1) {
         cout << "J1 revendique la borne "<< num_borne << endl;
+
         if (il_y_a_joker(cartes_pose_j1) || il_y_a_portebou(cartes_pose_j1) || il_y_a_espion(cartes_pose_j1)) {
+            //Si on a des cartes troupes d'elite alors J1 choisi leur valeur
             for (auto c: cartes_pose_j1) {
                 if (auto t = dynamic_cast<CarteTroupeElite *>(c)) {
                     auto nom = t->getNom();
@@ -690,9 +696,6 @@ void Controleur::revendiquer_borne(int num_borne) {
                 }
             }
         }
-        // TODO temp
-        affichage_vecteur_carteclan(cartes_pose_j1);
-        cout << endl;
 
         int tab_troupe_tac[4] = {0, 0, 0, 0};
         if (il_y_a_joker(cartes_pose_j2) || il_y_a_portebou(cartes_pose_j2) || il_y_a_espion(cartes_pose_j2)) {
@@ -713,88 +716,88 @@ void Controleur::revendiquer_borne(int num_borne) {
             }
         }
         if (combi_j1->getBoue() == 0) {
+            // creation des vecteur sur les quels les cartes de J2 vont varier
             vector<CarteClan *> cartes_a1 = m_carte_non_pose;
             vector<CarteClan *> cartes_a2 = m_carte_non_pose;
             vector<CarteClan *> cartes_a3 = m_carte_non_pose;
-            cout << cartes_pose_j2.size() <<endl;
             if (cartes_pose_j2.size()) {
                 for (auto i = 0; i < cartes_pose_j2.size() ; i++)
                     switch (i) {
+                    case (0): {
+                        switch (tab_troupe_tac[i]) {
                         case (0): {
-                            switch (tab_troupe_tac[i]) {
-                                case (0): {
-                                    cartes_a1.clear();
-                                    cartes_a1.push_back(cartes_pose_j2[i]);
-                                    break;
-                                }
-                                case (1): {
-                                    cartes_a1.clear();
-                                    cartes_a1 = gen_vect_joker();
-                                    break;
-                                }
-                                case (2): {
-                                    cartes_a1.clear();
-                                    cartes_a1 = gen_vect_espion();
-                                    break;
-                                }
-                                case (3): {
-                                    cartes_a1.clear();
-                                    cartes_a1 = gen_vect_portebou();
-                                    break;
-                                }
-                            }
+                            cartes_a1.clear();
+                            cartes_a1.push_back(cartes_pose_j2[i]);
                             break;
                         }
                         case (1): {
-                            switch (tab_troupe_tac[i]) {
-                                case (0): {
-                                    cartes_a2.clear();
-                                    cartes_a2.push_back(cartes_pose_j2[i]);
-                                    break;
-                                }
-                                case (1): {
-                                    cartes_a2.clear();
-                                    cartes_a2 = gen_vect_joker();
-                                    break;
-                                }
-                                case (2): {
-                                    cartes_a2.clear();
-                                    cartes_a2 = gen_vect_espion();
-                                    break;
-                                }
-                                case (3): {
-                                    cartes_a2.clear();
-                                    cartes_a2 = gen_vect_portebou();
-                                    break;
-                                }
-                            }
+                            cartes_a1.clear();
+                            cartes_a1 = gen_vect_joker();
                             break;
                         }
                         case (2): {
-                            switch (tab_troupe_tac[i]) {
-                                case (0): {
-                                    cartes_a3.clear();
-                                    cartes_a3.push_back(cartes_pose_j2[i]);
-                                    break;
-                                }
-                                case (1): {
-                                    cartes_a3.clear();
-                                    cartes_a3 = gen_vect_joker();
-                                    break;
-                                }
-                                case (2): {
-                                    cartes_a3.clear();
-                                    cartes_a3 = gen_vect_espion();
-                                    break;
-                                }
-                                case (3): {
-                                    cartes_a3.clear();
-                                    cartes_a3 = gen_vect_portebou();
-                                    break;
-                                }
-                            }
+                            cartes_a1.clear();
+                            cartes_a1 = gen_vect_espion();
                             break;
                         }
+                        case (3): {
+                            cartes_a1.clear();
+                            cartes_a1 = gen_vect_portebou();
+                            break;
+                        }
+                        }
+                        break;
+                    }
+                    case (1): {
+                        switch (tab_troupe_tac[i]) {
+                        case (0): {
+                            cartes_a2.clear();
+                            cartes_a2.push_back(cartes_pose_j2[i]);
+                            break;
+                        }
+                        case (1): {
+                            cartes_a2.clear();
+                            cartes_a2 = gen_vect_joker();
+                            break;
+                        }
+                        case (2): {
+                            cartes_a2.clear();
+                            cartes_a2 = gen_vect_espion();
+                            break;
+                        }
+                        case (3): {
+                            cartes_a2.clear();
+                            cartes_a2 = gen_vect_portebou();
+                            break;
+                        }
+                        }
+                        break;
+                    }
+                    case (2): {
+                        switch (tab_troupe_tac[i]) {
+                        case (0): {
+                            cartes_a3.clear();
+                            cartes_a3.push_back(cartes_pose_j2[i]);
+                            break;
+                        }
+                        case (1): {
+                            cartes_a3.clear();
+                            cartes_a3 = gen_vect_joker();
+                            break;
+                        }
+                        case (2): {
+                            cartes_a3.clear();
+                            cartes_a3 = gen_vect_espion();
+                            break;
+                        }
+                        case (3): {
+                            cartes_a3.clear();
+                            cartes_a3 = gen_vect_portebou();
+                            break;
+                        }
+                        }
+                        break;
+                    }
                     }
             }
 
@@ -805,25 +808,26 @@ void Controleur::revendiquer_borne(int num_borne) {
                             CarteClan_egales(a2, a3)  )
                             continue;
 
-
                         Combinaison *combi_temp = new Combinaison();
                         combi_temp->ajouterCarte(a1);
                         combi_temp->ajouterCarte(a2);
                         combi_temp->ajouterCarte(a3);
                         if (qui_gagne(combi_j1, combi_temp) == 2) {
                             // J2 gagne
-                            cout << "\nJ2 peut gagner: " << endl;
-                            cout << a1->getPuissance() <<" "<< a1->getCouleur() << " "<< a2->getPuissance() <<" "<< a2->getCouleur() << " "<< a3->getPuissance() <<" "<< a3->getCouleur() << endl;
+                            std::ostringstream oss;
+                            oss << "\nECHEC J2 peut gagner: " << endl;
+                            oss << a1->getPuissance() <<" "<< a1->getCouleur() << " "<< a2->getPuissance() <<" "<< a2->getCouleur() << " "<< a3->getPuissance() <<" "<< a3->getCouleur() << endl;
                             delete combi_temp;
-                            return;
+                            return oss.str();
                         }
 
                     }
                 }
             }
-            cout << "J2 ne peut pas gagner" << endl;
+            std::ostringstream oss;
+            oss << "REUSSITE: J2 ne peut pas gagner (J1 gagne)" << endl;
             borne->setRevendique(1);
-            return;
+            return oss.str();
         }
         else {
             vector<CarteClan *> cartes_a1 = m_carte_non_pose;
@@ -833,112 +837,112 @@ void Controleur::revendiquer_borne(int num_borne) {
             if (cartes_pose_j2.size()) {
                 for (auto i = 0; i < cartes_pose_j2.size() ; i++)
                     switch (i) {
+                    case (0): {
+                        switch (tab_troupe_tac[i]) {
                         case (0): {
-                            switch (tab_troupe_tac[i]) {
-                                case (0): {
-                                    cartes_a1.clear();
-                                    cartes_a1.push_back(cartes_pose_j2[i]);
-                                    break;
-                                }
-                                case (1): {
-                                    cartes_a1.clear();
-                                    cartes_a1 = gen_vect_joker();
-                                    break;
-                                }
-                                case (2): {
-                                    cartes_a1.clear();
-                                    cartes_a1 = gen_vect_espion();
-                                    break;
-                                }
-                                case (3): {
-                                    cartes_a1.clear();
-                                    cartes_a1 = gen_vect_portebou();
-                                    break;
-                                }
-                            }
+                            cartes_a1.clear();
+                            cartes_a1.push_back(cartes_pose_j2[i]);
                             break;
                         }
                         case (1): {
-                            switch (tab_troupe_tac[i]) {
-                                case (0): {
-                                    cartes_a2.clear();
-                                    cartes_a2.push_back(cartes_pose_j2[i]);
-                                    break;
-                                }
-                                case (1): {
-                                    cartes_a2.clear();
-                                    cartes_a2 = gen_vect_joker();
-                                    break;
-                                }
-                                case (2): {
-                                    cartes_a2.clear();
-                                    cartes_a2 = gen_vect_espion();
-                                    break;
-                                }
-                                case (3): {
-                                    cartes_a2.clear();
-                                    cartes_a2 = gen_vect_portebou();
-                                    break;
-                                }
-                            }
+                            cartes_a1.clear();
+                            cartes_a1 = gen_vect_joker();
                             break;
                         }
                         case (2): {
-                            switch (tab_troupe_tac[i]) {
-                                case (0): {
-                                    cartes_a3.clear();
-                                    cartes_a3.push_back(cartes_pose_j2[i]);
-                                    break;
-                                }
-                                case (1): {
-                                    cartes_a3.clear();
-                                    cartes_a3 = gen_vect_joker();
-                                    break;
-                                }
-                                case (2): {
-                                    cartes_a3.clear();
-                                    cartes_a3 = gen_vect_espion();
-                                    break;
-                                }
-                                case (3): {
-                                    cartes_a3.clear();
-                                    cartes_a3 = gen_vect_portebou();
-                                    break;
-                                }
-                            }
+                            cartes_a1.clear();
+                            cartes_a1 = gen_vect_espion();
                             break;
                         }
                         case (3): {
-                            switch (tab_troupe_tac[i]) {
-                                case (0): {
-                                    cartes_a4.clear();
-                                    cartes_a4.push_back(cartes_pose_j2[i]);
-                                    break;
-                                }
-                                case (1): {
-                                    cartes_a4.clear();
-                                    cartes_a4 = gen_vect_joker();
-                                    break;
-                                }
-                                case (2): {
-                                    cartes_a4.clear();
-                                    cartes_a4 = gen_vect_espion();
-                                    break;
-                                }
-                                case (3): {
-                                    cartes_a4.clear();
-                                    cartes_a4 = gen_vect_portebou();
-                                    break;
-                                }
-                            }
+                            cartes_a1.clear();
+                            cartes_a1 = gen_vect_portebou();
                             break;
                         }
+                        }
+                        break;
+                    }
+                    case (1): {
+                        switch (tab_troupe_tac[i]) {
+                        case (0): {
+                            cartes_a2.clear();
+                            cartes_a2.push_back(cartes_pose_j2[i]);
+                            break;
+                        }
+                        case (1): {
+                            cartes_a2.clear();
+                            cartes_a2 = gen_vect_joker();
+                            break;
+                        }
+                        case (2): {
+                            cartes_a2.clear();
+                            cartes_a2 = gen_vect_espion();
+                            break;
+                        }
+                        case (3): {
+                            cartes_a2.clear();
+                            cartes_a2 = gen_vect_portebou();
+                            break;
+                        }
+                        }
+                        break;
+                    }
+                    case (2): {
+                        switch (tab_troupe_tac[i]) {
+                        case (0): {
+                            cartes_a3.clear();
+                            cartes_a3.push_back(cartes_pose_j2[i]);
+                            break;
+                        }
+                        case (1): {
+                            cartes_a3.clear();
+                            cartes_a3 = gen_vect_joker();
+                            break;
+                        }
+                        case (2): {
+                            cartes_a3.clear();
+                            cartes_a3 = gen_vect_espion();
+                            break;
+                        }
+                        case (3): {
+                            cartes_a3.clear();
+                            cartes_a3 = gen_vect_portebou();
+                            break;
+                        }
+                        }
+                        break;
+                    }
+                    case (3): {
+                        switch (tab_troupe_tac[i]) {
+                        case (0): {
+                            cartes_a4.clear();
+                            cartes_a4.push_back(cartes_pose_j2[i]);
+                            break;
+                        }
+                        case (1): {
+                            cartes_a4.clear();
+                            cartes_a4 = gen_vect_joker();
+                            break;
+                        }
+                        case (2): {
+                            cartes_a4.clear();
+                            cartes_a4 = gen_vect_espion();
+                            break;
+                        }
+                        case (3): {
+                            cartes_a4.clear();
+                            cartes_a4 = gen_vect_portebou();
+                            break;
+                        }
+                        }
+                        break;
+                    }
                     }
             }
             for (auto a1: cartes_a1) {
                 for (auto a2: cartes_a2) {
                     for (auto a3: cartes_a3) {
-                        for (auto a4: cartes_a3) {
+                        for (auto a4: cartes_a4) {
                             if (CarteClan_egales(a1, a2) || CarteClan_egales(a1, a3) || CarteClan_egales(a1, a4) ||
                                 CarteClan_egales(a2, a3) || CarteClan_egales(a2, a4) || CarteClan_egales(a3, a4))
                                 continue;
@@ -950,19 +954,21 @@ void Controleur::revendiquer_borne(int num_borne) {
                             combi_temp->ajouterCarte(a4);
                             if (qui_gagne(combi_j1, combi_temp) == 2) {
                                 // J2 gagne
-                                cout << "J2 peut gagner" << endl;
-                                cout << a1->getPuissance() <<" "<< a1->getCouleur() << " "<< a2->getPuissance() <<" "<< a2->getCouleur() << " "<< a3->getPuissance() <<" "<< a3->getCouleur() << " "<< a4->getPuissance() <<" "<< a4->getCouleur() << endl;
+                                std::ostringstream oss;
+                                oss << "ECHEC J2 peut gagner" << endl;
+                                oss << a1->getPuissance() <<" "<< a1->getCouleur() << " "<< a2->getPuissance() <<" "<< a2->getCouleur() << " "<< a3->getPuissance() <<" "<< a3->getCouleur() << " "<< a4->getPuissance() <<" "<< a4->getCouleur() << endl;
                                 delete combi_temp;
-                                return;
+                                return oss.str();
 
                             }
                         }
                     }
                 }
             }
-            cout << "J2 ne peut pas gagner" << endl;
+            std::ostringstream oss;
+            oss << "REUSSITE J2 ne peut pas gagner (J1 gagne 2)" << endl;
             borne->setRevendique(1);
-            return;
+            return oss.str();
         }
     }
     else {
@@ -1013,85 +1019,84 @@ void Controleur::revendiquer_borne(int num_borne) {
             vector<CarteClan *> cartes_a1 = m_carte_non_pose;
             vector<CarteClan *> cartes_a2 = m_carte_non_pose;
             vector<CarteClan *> cartes_a3 = m_carte_non_pose;
-            cout << cartes_pose_j1.size() <<endl;
             if (cartes_pose_j1.size()) {
                 for (auto i = 0; i < cartes_pose_j1.size(); i++)
                     switch (i) {
+                    case (0): {
+                        switch (tab_troupe_tac[i]) {
                         case (0): {
-                            switch (tab_troupe_tac[i]) {
-                                case (0): {
-                                    cartes_a1.clear();
-                                    cartes_a1.push_back(cartes_pose_j2[i]);
-                                    break;
-                                }
-                                case (1): {
-                                    cartes_a1.clear();
-                                    cartes_a1 = gen_vect_joker();
-                                    break;
-                                }
-                                case (2): {
-                                    cartes_a1.clear();
-                                    cartes_a1 = gen_vect_espion();
-                                    break;
-                                }
-                                case (3): {
-                                    cartes_a1.clear();
-                                    cartes_a1 = gen_vect_portebou();
-                                    break;
-                                }
-                            }
+                            cartes_a1.clear();
+                            cartes_a1.push_back(cartes_pose_j2[i]);
                             break;
                         }
                         case (1): {
-                            switch (tab_troupe_tac[i]) {
-                                case (0): {
-                                    cartes_a2.clear();
-                                    cartes_a2.push_back(cartes_pose_j2[i]);
-                                    break;
-                                }
-                                case (1): {
-                                    cartes_a2.clear();
-                                    cartes_a2 = gen_vect_joker();
-                                    break;
-                                }
-                                case (2): {
-                                    cartes_a2.clear();
-                                    cartes_a2 = gen_vect_espion();
-                                    break;
-                                }
-                                case (3): {
-                                    cartes_a2.clear();
-                                    cartes_a2 = gen_vect_portebou();
-                                    break;
-                                }
-                            }
+                            cartes_a1.clear();
+                            cartes_a1 = gen_vect_joker();
                             break;
                         }
                         case (2): {
-                            switch (tab_troupe_tac[i]) {
-                                case (0): {
-                                    cartes_a3.clear();
-                                    cartes_a3.push_back(cartes_pose_j2[i]);
-                                    break;
-                                }
-                                case (1): {
-                                    cartes_a3.clear();
-                                    cartes_a3 = gen_vect_joker();
-                                    break;
-                                }
-                                case (2): {
-                                    cartes_a3.clear();
-                                    cartes_a3 = gen_vect_espion();
-                                    break;
-                                }
-                                case (3): {
-                                    cartes_a3.clear();
-                                    cartes_a3 = gen_vect_portebou();
-                                    break;
-                                }
-                            }
+                            cartes_a1.clear();
+                            cartes_a1 = gen_vect_espion();
                             break;
                         }
+                        case (3): {
+                            cartes_a1.clear();
+                            cartes_a1 = gen_vect_portebou();
+                            break;
+                        }
+                        }
+                        break;
+                    }
+                    case (1): {
+                        switch (tab_troupe_tac[i]) {
+                        case (0): {
+                            cartes_a2.clear();
+                            cartes_a2.push_back(cartes_pose_j2[i]);
+                            break;
+                        }
+                        case (1): {
+                            cartes_a2.clear();
+                            cartes_a2 = gen_vect_joker();
+                            break;
+                        }
+                        case (2): {
+                            cartes_a2.clear();
+                            cartes_a2 = gen_vect_espion();
+                            break;
+                        }
+                        case (3): {
+                            cartes_a2.clear();
+                            cartes_a2 = gen_vect_portebou();
+                            break;
+                        }
+                        }
+                        break;
+                    }
+                    case (2): {
+                        switch (tab_troupe_tac[i]) {
+                        case (0): {
+                            cartes_a3.clear();
+                            cartes_a3.push_back(cartes_pose_j2[i]);
+                            break;
+                        }
+                        case (1): {
+                            cartes_a3.clear();
+                            cartes_a3 = gen_vect_joker();
+                            break;
+                        }
+                        case (2): {
+                            cartes_a3.clear();
+                            cartes_a3 = gen_vect_espion();
+                            break;
+                        }
+                        case (3): {
+                            cartes_a3.clear();
+                            cartes_a3 = gen_vect_portebou();
+                            break;
+                        }
+                        }
+                        break;
+                    }
                     }
             }
 
@@ -1106,18 +1111,20 @@ void Controleur::revendiquer_borne(int num_borne) {
                         combi_temp->ajouterCarte(a2);
                         combi_temp->ajouterCarte(a3);
                         if (qui_gagne(combi_j2, combi_temp) == 2) {
-                            // J2 gagne
-                            cout << "\nJ1 peut gagner: " << endl;
-                            cout << a1->getPuissance() <<" "<< a1->getCouleur() << " "<< a2->getPuissance() <<" "<< a2->getCouleur() << " "<< a3->getPuissance() <<" "<< a3->getCouleur() << endl;
+                            // J1 gagne
+                            std::ostringstream oss;
+                            oss << "\nECHEC J1 peut gagner: " << endl;
+                            oss << a1->getPuissance() <<" "<< a1->getCouleur() << " "<< a2->getPuissance() <<" "<< a2->getCouleur() << " "<< a3->getPuissance() <<" "<< a3->getCouleur() << endl;
                             delete combi_temp;
-                            return;
+                            return oss.str();
                         }
                     }
                 }
             }
-            cout << "J1 ne peut pas gagner" << endl;
+            std::ostringstream oss;
+            oss << "REUSSITE J1 ne peut pas gagner (J2 gagne 1)" << endl;
             borne->setRevendique(2);
-            return;
+            return oss.str();
         }
         else {
             vector<CarteClan *> cartes_a1 = m_carte_non_pose;
@@ -1127,106 +1134,106 @@ void Controleur::revendiquer_borne(int num_borne) {
             if (cartes_pose_j1.size()) {
                 for (auto i = 0; i < cartes_pose_j1.size() ; i++)
                     switch (i) {
+                    case (0): {
+                        switch (tab_troupe_tac[i]) {
                         case (0): {
-                            switch (tab_troupe_tac[i]) {
-                                case (0): {
-                                    cartes_a1.clear();
-                                    cartes_a1.push_back(cartes_pose_j2[i]);
-                                    break;
-                                }
-                                case (1): {
-                                    cartes_a1.clear();
-                                    cartes_a1 = gen_vect_joker();
-                                    break;
-                                }
-                                case (2): {
-                                    cartes_a1.clear();
-                                    cartes_a1 = gen_vect_espion();
-                                    break;
-                                }
-                                case (3): {
-                                    cartes_a1.clear();
-                                    cartes_a1 = gen_vect_portebou();
-                                    break;
-                                }
-                            }
+                            cartes_a1.clear();
+                            cartes_a1.push_back(cartes_pose_j2[i]);
                             break;
                         }
                         case (1): {
-                            switch (tab_troupe_tac[i]) {
-                                case (0): {
-                                    cartes_a2.clear();
-                                    cartes_a2.push_back(cartes_pose_j2[i]);
-                                    break;
-                                }
-                                case (1): {
-                                    cartes_a2.clear();
-                                    cartes_a2 = gen_vect_joker();
-                                    break;
-                                }
-                                case (2): {
-                                    cartes_a2.clear();
-                                    cartes_a2 = gen_vect_espion();
-                                    break;
-                                }
-                                case (3): {
-                                    cartes_a2.clear();
-                                    cartes_a2 = gen_vect_portebou();
-                                    break;
-                                }
-                            }
+                            cartes_a1.clear();
+                            cartes_a1 = gen_vect_joker();
                             break;
                         }
                         case (2): {
-                            switch (tab_troupe_tac[i]) {
-                                case (0): {
-                                    cartes_a3.clear();
-                                    cartes_a3.push_back(cartes_pose_j2[i]);
-                                    break;
-                                }
-                                case (1): {
-                                    cartes_a3.clear();
-                                    cartes_a3 = gen_vect_joker();
-                                    break;
-                                }
-                                case (2): {
-                                    cartes_a3.clear();
-                                    cartes_a3 = gen_vect_espion();
-                                    break;
-                                }
-                                case (3): {
-                                    cartes_a3.clear();
-                                    cartes_a3 = gen_vect_portebou();
-                                    break;
-                                }
-                            }
+                            cartes_a1.clear();
+                            cartes_a1 = gen_vect_espion();
                             break;
                         }
                         case (3): {
-                            switch (tab_troupe_tac[i]) {
-                                case (0): {
-                                    cartes_a4.clear();
-                                    cartes_a4.push_back(cartes_pose_j2[i]);
-                                    break;
-                                }
-                                case (1): {
-                                    cartes_a4.clear();
-                                    cartes_a4 = gen_vect_joker();
-                                    break;
-                                }
-                                case (2): {
-                                    cartes_a4.clear();
-                                    cartes_a4 = gen_vect_espion();
-                                    break;
-                                }
-                                case (3): {
-                                    cartes_a4.clear();
-                                    cartes_a4 = gen_vect_portebou();
-                                    break;
-                                }
-                            }
+                            cartes_a1.clear();
+                            cartes_a1 = gen_vect_portebou();
                             break;
                         }
+                        }
+                        break;
+                    }
+                    case (1): {
+                        switch (tab_troupe_tac[i]) {
+                        case (0): {
+                            cartes_a2.clear();
+                            cartes_a2.push_back(cartes_pose_j2[i]);
+                            break;
+                        }
+                        case (1): {
+                            cartes_a2.clear();
+                            cartes_a2 = gen_vect_joker();
+                            break;
+                        }
+                        case (2): {
+                            cartes_a2.clear();
+                            cartes_a2 = gen_vect_espion();
+                            break;
+                        }
+                        case (3): {
+                            cartes_a2.clear();
+                            cartes_a2 = gen_vect_portebou();
+                            break;
+                        }
+                        }
+                        break;
+                    }
+                    case (2): {
+                        switch (tab_troupe_tac[i]) {
+                        case (0): {
+                            cartes_a3.clear();
+                            cartes_a3.push_back(cartes_pose_j2[i]);
+                            break;
+                        }
+                        case (1): {
+                            cartes_a3.clear();
+                            cartes_a3 = gen_vect_joker();
+                            break;
+                        }
+                        case (2): {
+                            cartes_a3.clear();
+                            cartes_a3 = gen_vect_espion();
+                            break;
+                        }
+                        case (3): {
+                            cartes_a3.clear();
+                            cartes_a3 = gen_vect_portebou();
+                            break;
+                        }
+                        }
+                        break;
+                    }
+                    case (3): {
+                        switch (tab_troupe_tac[i]) {
+                        case (0): {
+                            cartes_a4.clear();
+                            cartes_a4.push_back(cartes_pose_j2[i]);
+                            break;
+                        }
+                        case (1): {
+                            cartes_a4.clear();
+                            cartes_a4 = gen_vect_joker();
+                            break;
+                        }
+                        case (2): {
+                            cartes_a4.clear();
+                            cartes_a4 = gen_vect_espion();
+                            break;
+                        }
+                        case (3): {
+                            cartes_a4.clear();
+                            cartes_a4 = gen_vect_portebou();
+                            break;
+                        }
+                        }
+                        break;
+                    }
                     }
             }
             for (auto a1: cartes_a1) {
@@ -1237,24 +1244,27 @@ void Controleur::revendiquer_borne(int num_borne) {
                                 CarteClan_egales(a2, a3) || CarteClan_egales(a2, a4) || CarteClan_egales(a3, a4))
                                 continue;
                             Combinaison *combi_temp = new Combinaison();
+                            combi_temp->setBoue(true);
                             combi_temp->ajouterCarte(a1);
                             combi_temp->ajouterCarte(a2);
                             combi_temp->ajouterCarte(a3);
                             combi_temp->ajouterCarte(a4);
                             if (qui_gagne(combi_j2, combi_temp) == 2) {
-                                // J2 gagne
-                                cout << "J1 peut gagner" << endl;
-                                cout << a1 << " " << a2 << " " << a3 << endl;
+                                // J1 gagne
+                                std::ostringstream oss;
+                                oss << "ECHEC J1 peut gagner" << endl;
+                                oss << a1->getPuissance() <<" "<< a1->getCouleur() << " "<< a2->getPuissance() <<" "<< a2->getCouleur()  << " "<< a3->getPuissance() <<" "<< a3->getCouleur() << " "<< a4->getPuissance() <<" "<< a4->getCouleur() << endl;
                                 delete combi_temp;
-                                return;
+                                return oss.str();
                             }
                         }
                     }
                 }
             }
-            cout << "J1 ne peut pas gagner" << endl;
-            borne->setRevendique(1);
-            return;
+            std::ostringstream oss;
+            oss << "REUSSITE J1 ne peut pas gagner (J2 gagne 2)" << endl;
+            borne->setRevendique(2);
+            return oss.str();
         }
     }
 }

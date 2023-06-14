@@ -542,7 +542,8 @@ void VuePlateau::revendiquerClique() {
     for (int i=0; i<9; i++){
         if(bornes[i]->isChecked()){
             if (j_actif==1) {
-                Controleur::getControleur(false).revendiquer_borne(i);
+                std::string msg = Controleur::getControleur(true).revendiquer_borne(i);
+                QMessageBox::information(this, "Revendication", msg.c_str());
                 /*switch (res) {
                     case 0:
                         QMessageBox::information(this, "Revendication", "Vous n'avez pas assez de cartes sur cette borne pour la revendiquer' !");
@@ -558,7 +559,8 @@ void VuePlateau::revendiquerClique() {
             }
 
             else {
-                Controleur::getControleur(false).revendiquer_borne(i);
+                std::string msg = Controleur::getControleur(true).revendiquer_borne(i);
+                QMessageBox::information(this, "Revendication", msg.c_str());
                 /*switch (res) {
                     case 0:
                         QMessageBox::information(this, "Revendication", "Vous n'avez pas assez de cartes sur cette borne pour la revendiquer' !");
