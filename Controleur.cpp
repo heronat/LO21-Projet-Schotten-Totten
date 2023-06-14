@@ -800,6 +800,15 @@ std::string Controleur::revendiquer_borne(int num_borne) {
                     }
                     }
             }
+            // TODO temporaire
+            cout << "\ncartes" << endl;
+            cout << cartes_pose_j2.size()<< endl;
+            cout << "\ncartes_a1" << endl;
+            affichage_vecteur_carteclan(cartes_a1);
+            cout << "\ncartes_a2" << endl;
+            affichage_vecteur_carteclan(cartes_a2);
+            cout << "\ncartes_a3" << endl;
+            affichage_vecteur_carteclan(cartes_a3);
 
             for (auto a1: cartes_a1) {
                 for (auto a2: cartes_a2) {
@@ -939,6 +948,15 @@ std::string Controleur::revendiquer_borne(int num_borne) {
                     }
                     }
             }
+            // TODO temporaire
+            cout << "cartes_a1" << endl;
+            affichage_vecteur_carteclan(cartes_a1);
+            cout << "cartes_a2" << endl;
+            affichage_vecteur_carteclan(cartes_a2);
+            cout << "cartes_a3" << endl;
+            affichage_vecteur_carteclan(cartes_a3);
+            cout << "cartes_a4" << endl;
+            affichage_vecteur_carteclan(cartes_a4);
             for (auto a1: cartes_a1) {
                 for (auto a2: cartes_a2) {
                     for (auto a3: cartes_a3) {
@@ -1026,7 +1044,7 @@ std::string Controleur::revendiquer_borne(int num_borne) {
                         switch (tab_troupe_tac[i]) {
                         case (0): {
                             cartes_a1.clear();
-                            cartes_a1.push_back(cartes_pose_j2[i]);
+                            cartes_a1.push_back(cartes_pose_j1[i]);
                             break;
                         }
                         case (1): {
@@ -1051,7 +1069,7 @@ std::string Controleur::revendiquer_borne(int num_borne) {
                         switch (tab_troupe_tac[i]) {
                         case (0): {
                             cartes_a2.clear();
-                            cartes_a2.push_back(cartes_pose_j2[i]);
+                            cartes_a2.push_back(cartes_pose_j1[i]);
                             break;
                         }
                         case (1): {
@@ -1076,7 +1094,7 @@ std::string Controleur::revendiquer_borne(int num_borne) {
                         switch (tab_troupe_tac[i]) {
                         case (0): {
                             cartes_a3.clear();
-                            cartes_a3.push_back(cartes_pose_j2[i]);
+                            cartes_a3.push_back(cartes_pose_j1[i]);
                             break;
                         }
                         case (1): {
@@ -1099,6 +1117,13 @@ std::string Controleur::revendiquer_borne(int num_borne) {
                     }
                     }
             }
+            // TODO temporaire
+            cout << "cartes_a1" << endl;
+            affichage_vecteur_carteclan(cartes_a1);
+            cout << "cartes_a2" << endl;
+            affichage_vecteur_carteclan(cartes_a2);
+            cout << "cartes_a3" << endl;
+            affichage_vecteur_carteclan(cartes_a3);
 
             for (auto a1: cartes_a1) {
                 for (auto a2: cartes_a2) {
@@ -1138,7 +1163,7 @@ std::string Controleur::revendiquer_borne(int num_borne) {
                         switch (tab_troupe_tac[i]) {
                         case (0): {
                             cartes_a1.clear();
-                            cartes_a1.push_back(cartes_pose_j2[i]);
+                            cartes_a1.push_back(cartes_pose_j1[i]);
                             break;
                         }
                         case (1): {
@@ -1163,7 +1188,7 @@ std::string Controleur::revendiquer_borne(int num_borne) {
                         switch (tab_troupe_tac[i]) {
                         case (0): {
                             cartes_a2.clear();
-                            cartes_a2.push_back(cartes_pose_j2[i]);
+                            cartes_a2.push_back(cartes_pose_j1[i]);
                             break;
                         }
                         case (1): {
@@ -1188,7 +1213,7 @@ std::string Controleur::revendiquer_borne(int num_borne) {
                         switch (tab_troupe_tac[i]) {
                         case (0): {
                             cartes_a3.clear();
-                            cartes_a3.push_back(cartes_pose_j2[i]);
+                            cartes_a3.push_back(cartes_pose_j1[i]);
                             break;
                         }
                         case (1): {
@@ -1213,7 +1238,7 @@ std::string Controleur::revendiquer_borne(int num_borne) {
                         switch (tab_troupe_tac[i]) {
                         case (0): {
                             cartes_a4.clear();
-                            cartes_a4.push_back(cartes_pose_j2[i]);
+                            cartes_a4.push_back(cartes_pose_j1[i]);
                             break;
                         }
                         case (1): {
@@ -1236,6 +1261,16 @@ std::string Controleur::revendiquer_borne(int num_borne) {
                     }
                     }
             }
+            // TODO temporaire
+            cout << "cartes_a1" << endl;
+            affichage_vecteur_carteclan(cartes_a1);
+            cout << "cartes_a2" << endl;
+            affichage_vecteur_carteclan(cartes_a2);
+            cout << "cartes_a3" << endl;
+            affichage_vecteur_carteclan(cartes_a3);
+            cout << "cartes_a4" << endl;
+            affichage_vecteur_carteclan(cartes_a4);
+
             for (auto a1: cartes_a1) {
                 for (auto a2: cartes_a2) {
                     for (auto a3: cartes_a3) {
