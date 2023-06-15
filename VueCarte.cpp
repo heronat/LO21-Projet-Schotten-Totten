@@ -96,12 +96,12 @@ VueCarte::VueCarte(const Carte& c, QWidget *parent) : QPushButton(parent),carte(
         else if(couleur_carte_string == "Marron")
             setStyleSheet("background-color: chocolate");
         else
-            setStyleSheet("background-color: white");
+            setStyleSheet("background-color: white ; color: black");
     }
     else {
         const CarteTactique* carte_tactique = dynamic_cast<const CarteTactique*>(carte);
         const string nom= carte_tactique->getNom();
-        setStyleSheet("background-color: white");
+        setStyleSheet("background-color: white ; color : black");
         setText(QString::fromStdString(nom));
     }
 
