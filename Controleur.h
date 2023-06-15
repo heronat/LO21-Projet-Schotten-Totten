@@ -70,7 +70,7 @@ public:
 
     Pioche* getPiocheClan() const { return m_pioche_clan; }
     Pioche* getPiocheTactique() const { return m_pioche_tactique; }
-    void revendiquer_borne(int num_borne);
+    std::string revendiquer_borne(int num_borne);
 /*    void revendiquer_borne_pleine_non_tactique(int num_borne);
     void revendiquer_borne_non_pleine_non_tactique(int num_borne );
 

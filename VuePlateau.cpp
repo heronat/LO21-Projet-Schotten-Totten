@@ -221,44 +221,68 @@ void VuePlateau::launch_menu_pioche() {
 void VuePlateau::launch_menu_carte_tactique(VueCarte *vc) {
     auto *menu = new QWidget();
     menu ->resize(500, 180);
-
+    auto carte_clan = const_cast<CarteTroupeElite *>(dynamic_cast<const CarteTroupeElite *>(&(vc->getCarte())));
+    string nom = carte_clan->getNom();
     menu->setContentsMargins(50, 30, 50, 50);
     auto *gridLayout = new QGridLayout;
 
     auto *editionLabel = new QLabel("Choix de la valeur :");
     auto* editionCombo = new QComboBox();
     auto *model = new QStandardItemModel();
-    auto *item1 = new QStandardItem("-- Veuillez choisir une option --");
-    auto *item2 = new QStandardItem("0");
-    auto *item3 = new QStandardItem("1");
-    auto *item4 = new QStandardItem("2");
-    auto *item5 = new QStandardItem("3");
-    auto *item6 = new QStandardItem("4");
-    auto *item7 = new QStandardItem("5");
-    auto *item8 = new QStandardItem("6");
-    auto *item9 = new QStandardItem("7");
-    auto *item10 = new QStandardItem("8");
-    auto *item11 = new QStandardItem("9");
+    if(nom == "Joker"){
+        auto *item1 = new QStandardItem("-- Veuillez choisir une option --");
+        auto *item3 = new QStandardItem("1");
+        auto *item4 = new QStandardItem("2");
+        auto *item5 = new QStandardItem("3");
+        auto *item6 = new QStandardItem("4");
+        auto *item7 = new QStandardItem("5");
+        auto *item8 = new QStandardItem("6");
+        auto *item9 = new QStandardItem("7");
+        auto *item10 = new QStandardItem("8");
+        auto *item11 = new QStandardItem("9");
 
 
-    model->appendRow(item1);
-    model->appendRow(item2);
-    model->appendRow(item3);
-    model->appendRow(item4);
-    model->appendRow(item5);
-    model->appendRow(item6);
-    model->appendRow(item7);
-    model->appendRow(item8);
-    model->appendRow(item9);
-    model->appendRow(item10);
-    model->appendRow(item11);
+        model->appendRow(item1);
+        model->appendRow(item3);
+        model->appendRow(item4);
+        model->appendRow(item5);
+        model->appendRow(item6);
+        model->appendRow(item7);
+        model->appendRow(item8);
+        model->appendRow(item9);
+        model->appendRow(item10);
+        model->appendRow(item11);
+        item1->setFlags(item1->flags() & ~Qt::ItemIsEnabled);
+    }
+    else if (nom == "Espion"){
+        auto *item1 = new QStandardItem("-- Veuillez choisir une option --");
+        auto *item9 = new QStandardItem("7");
+        model->appendRow(item1);
+        model->appendRow(item9);
+
+        item1->setFlags(item1->flags() & ~Qt::ItemIsEnabled);
+    }
+    else if (nom == "Porte_Bouclier"){
+        auto *item1 = new QStandardItem("-- Veuillez choisir une option --");
+        auto *item3 = new QStandardItem("1");
+        auto *item4 = new QStandardItem("2");
+        auto *item5 = new QStandardItem("3");
+
+
+        model->appendRow(item1);
+        model->appendRow(item3);
+        model->appendRow(item4);
+        model->appendRow(item5);
+        item1->setFlags(item1->flags() & ~Qt::ItemIsEnabled);
+    }
+
 
 
     editionCombo->setCurrentIndex(0);
     editionCombo->setMinimumWidth(200);
     editionCombo->setStyle(QStyleFactory::create("Fusion"));
 
-    item1->setFlags(item1->flags() & ~Qt::ItemIsEnabled);
+
 
     editionCombo->setModel(model);
 
@@ -290,7 +314,7 @@ void VuePlateau::launch_menu_carte_tactique(VueCarte *vc) {
     IaCombo->setMinimumWidth(200);
     IaCombo->setStyle(QStyleFactory::create("Fusion"));
 
-    item1Ia->setFlags(item1->flags() & ~Qt::ItemIsEnabled);
+    item1Ia->setFlags(item1Ia->flags() & ~Qt::ItemIsEnabled);
 
     IaCombo->setModel(modelIa);
 
@@ -423,7 +447,7 @@ void VuePlateau::carteClique(VueCarte *vc) {
                                     break;
                                 }
                             }
-                            i++;
+                            j++;
                         }
                         cout << "debug6" << endl;
                         if(Controleur::getControleur(false).getTactique()){
@@ -494,7 +518,7 @@ void VuePlateau::carteClique(VueCarte *vc) {
                         vector<Carte *> vect = Controleur::getControleur(
                                 false).getPlateau()->getJoueur2()->getMain()->getCartes();
                         //affichage_vecteur_carte(vect);
-                        int i = 0;
+                        int j = 0;
                         cout << "debug5" << endl;
                         cout << vect.size() << endl;
                         for (auto &carte: vect) {
@@ -504,13 +528,13 @@ void VuePlateau::carteClique(VueCarte *vc) {
                                     cout << "debug7" << endl;
                                     cout << carteClan->getCouleur() << endl;
                                     cout << carteClan->getPuissance() << endl;
-                                    cout << "i=" << i << endl;
+                                    cout << "i=" << j << endl;
                                     Controleur::getControleur(
-                                            false).getPlateau()->getJoueur2()->getMain()->supprimerCarte(i);
+                                            false).getPlateau()->getJoueur2()->getMain()->supprimerCarte(j);
                                     break;
                                 }
                             }
-                            i++;
+                            j++;
                         }
                         cout << "debug6" << endl;
                         if(Controleur::getControleur(false).getTactique()){
@@ -542,7 +566,8 @@ void VuePlateau::revendiquerClique() {
     for (int i=0; i<9; i++){
         if(bornes[i]->isChecked()){
             if (j_actif==1) {
-                Controleur::getControleur(false).revendiquer_borne(i);
+                std::string msg = Controleur::getControleur(true).revendiquer_borne(i);
+                QMessageBox::information(this, "Revendication", msg.c_str());
                 /*switch (res) {
                     case 0:
                         QMessageBox::information(this, "Revendication", "Vous n'avez pas assez de cartes sur cette borne pour la revendiquer' !");
@@ -558,7 +583,8 @@ void VuePlateau::revendiquerClique() {
             }
 
             else {
-                Controleur::getControleur(false).revendiquer_borne(i);
+                std::string msg = Controleur::getControleur(true).revendiquer_borne(i);
+                QMessageBox::information(this, "Revendication", msg.c_str());
                 /*switch (res) {
                     case 0:
                         QMessageBox::information(this, "Revendication", "Vous n'avez pas assez de cartes sur cette borne pour la revendiquer' !");
