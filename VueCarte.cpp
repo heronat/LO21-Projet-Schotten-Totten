@@ -101,7 +101,7 @@ VueCarte::VueCarte(const Carte& c, QWidget *parent) : QPushButton(parent),carte(
     else {
         const CarteTactique* carte_tactique = dynamic_cast<const CarteTactique*>(carte);
         const string nom= carte_tactique->getNom();
-        setStyleSheet("background-color: white ; color : black");
+        setStyleSheet("background-color: white ; color : black ");
         setText(QString::fromStdString(nom));
     }
 
