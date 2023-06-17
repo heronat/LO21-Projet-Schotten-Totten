@@ -372,8 +372,30 @@ void VuePlateau::launch_menu_carte_tactique(VueCarte *vc) {
 }
 
 void VuePlateau::carteposeClique(VueCarte *vc) {
+    bool carte_adverse = false;
     if(auto carte_tactique= dynamic_cast<const CarteTroupeElite *>(&(vc->getCarte()))){
-        launch_menu_carte_tactique(vc);
+        if (j_actif == 1){
+            for (auto &carte : vuecartesj2) {
+                if (carte == vc){
+                    QMessageBox::information(this, "Information", "Vous ne pouvez pas modifier une carte adverse");
+                    carte_adverse = true;
+                }
+            }
+            if(!carte_adverse){
+                launch_menu_carte_tactique(vc);
+            }
+        }
+        else {
+            for (auto &carte : vuecartesj1) {
+                if (carte == vc){
+                    QMessageBox::information(this, "Information", "Vous ne pouvez pas modifier une carte adverse");
+                    carte_adverse = true;
+                }
+            }
+            if(!carte_adverse){
+                launch_menu_carte_tactique(vc);
+            }
+        }
     }
 }
 

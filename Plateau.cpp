@@ -7,20 +7,15 @@
 
 void Plateau::poser(Borne borne, CarteClan* carte){
     borne.ajouter_carte(carte);
-    //if(m_joueur_actif == 1){
-        
+    if (auto carte_troupe_elite = dynamic_cast<CarteTroupeElite*>(carte)){
+        if(m_joueur_actif == 1 && carte_troupe_elite->getNom() == "Joker"){
+            m_joueur1->setJoker(true);
+        }
+        else if(m_joueur_actif == 2 && carte_troupe_elite->getNom() == "Joker"){
+            m_joueur2->setJoker(true);
+        }
+    }
 
-        //int fcombi = borne.m_cartesj1->getForceCombi();
-        //std::cout << "Force combi : " << fcombi << std::endl;
-        //borne.m_cartesj1->ajouterCarte(carte);
-        // TODO : ajouter une fonction retirer carte avec cette cate dans la main du joueur
-    //}
-    //else{
-       // int fcombi = borne.m_cartesj2->getForceCombi();
-        //std::cout << "Force combi : " << fcombi << std::endl;
-        //borne.m_cartesj2->ajouterCarte(carte);
-        // TODO : ajouter une fonction retirer carte avec cette cate dans la main du joueur
-    //}
     Controleur::getControleur(true).supprimer_carte_pose_v2(carte);
 }
 

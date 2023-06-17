@@ -23,6 +23,14 @@ public:
         return m_ia;
     }
 
+    bool getJoker() const {
+        return Joker;
+    }
+
+    void setJoker(bool joker) {
+        Joker = joker;
+    }
+
     Joueur(const Joueur&) = default;
     Joueur& operator=(const Joueur&) = delete;
 };
