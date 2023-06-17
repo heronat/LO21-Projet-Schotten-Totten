@@ -408,11 +408,13 @@ void VuePlateau::carteClique(VueCarte *vc) {
                         if(carte_tactique->getNom()=="Colin Maillard"){
                             CarteModeCombat::jouer_ColinMaillard(Controleur::getControleur(false).getPlateau()->getBornes(i));
                             bornes[i]->setStyleSheet("background-color: limegreen; color: white;");
+                            bornes[i]->setText("Borne Colin");
                             cout<< "Colin Maillard joué sur borne : "<< i << endl;
                         }
                         else if(carte_tactique->getNom()=="Combat de Boue"){
                             CarteModeCombat::jouer_CombatdeBoue(Controleur::getControleur(false).getPlateau()->getBornes(i));
                             bornes[i]->setStyleSheet("background-color: lightgreen; color: white;");
+                            bornes[i]->setText("Borne Boue");
                             cout<< "Combat de boue joué sur borne : "<< i << endl;
                         }
                         string nom=carte_tactique->getNom();
@@ -498,11 +500,13 @@ void VuePlateau::carteClique(VueCarte *vc) {
                         if(carte_tactique->getNom()=="Colin Maillard"){
                             CarteModeCombat::jouer_ColinMaillard(Controleur::getControleur(false).getPlateau()->getBornes(i));
                             bornes[i]->setStyleSheet("background-color: limegreen; color: white;");
+                            bornes[i]->setText("Borne Colin");
                             cout<< "Colin Maillard joué sur borne : "<< i << endl;
                         }
                         else if(carte_tactique->getNom()=="Combat de Boue"){
                             CarteModeCombat::jouer_CombatdeBoue(Controleur::getControleur(false).getPlateau()->getBornes(i));
                             bornes[i]->setStyleSheet("background-color: lightgreen; color: white;");
+                            bornes[i]->setText("Borne Boue");
                             cout<< "Combat de boue joué sur borne : "<< i << endl;
                         }
                         string nom=carte_tactique->getNom();
