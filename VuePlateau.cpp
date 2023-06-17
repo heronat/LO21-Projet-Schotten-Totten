@@ -667,10 +667,37 @@ void VuePlateau::finDeTourClique() {
 
 void VuePlateau::menu_fin_partie(){
     if (Controleur::getControleur(false).getGagnant() == 1) {
-        QMessageBox::information(this, "Fin de partie", "Le joueur 1 a gagné !");
+        std::string asciiArt = "           ___________  \n"
+                               "         '._==_==_=_.'\n"
+                               "           .-\\:      /-.\n"
+                               "           | (|:.     |) |\n"
+                               "            '-|:.     |-'\n"
+                               "              \\::.    /\n"
+                               "               '::. .'\n"
+                               "                 ) (\n"
+                               "               _.' '._\n"
+                               "             `\"\"\"\"\"\"\"\"`\n"
+                               "            \nLe joueur 1 a gagné !";
+
+        std::cout << asciiArt << std::endl;
+
+        QMessageBox::information(this,"Fin  de partie",asciiArt.c_str());
     }
     else {
-        QMessageBox::information(this, "Fin de partie", "Le joueur 2 a gagné !");
+        std::string asciiArt = "           ___________  \n"
+                               "         '._==_==_=_.'\n"
+                               "           .-\\:      /-.\n"
+                               "           | (|:.     |) |\n"
+                               "            '-|:.     |-'\n"
+                               "              \\::.    /\n"
+                               "               '::. .'\n"
+                               "                 ) (\n"
+                               "               _.' '._\n"
+                               "             `\"\"\"\"\"\"\"\"`\n"
+                               "            \nLe joueur 2 a gagné !";
+
+                               std::cout << asciiArt << std::endl;
+        QMessageBox::information(this, "Fin de partie", asciiArt.c_str());
     }
     for (int i=0; i<9; i++){
         cout << Controleur::getControleur(false).getPlateau()->getBornes(i)->getRevendique()<< endl;
